@@ -3,7 +3,9 @@ export interface SignUp  {
     password: string,
     userType: string,
     year: string,
-    institute: string}
+    institute: string,
+    personalAccessToken:string
+}
 
 
 

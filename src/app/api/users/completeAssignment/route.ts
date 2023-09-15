@@ -1,4 +1,4 @@
-import { Assignments, CompleteAssignment } from "@/dbconfig/dbconfig";
+import Users, { Assignments, CompleteAssignment } from "@/dbconfig/dbconfig";
 import { assignments } from "@/types/interface";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,7 +7,7 @@ config();
 
 import { OpenAI } from "langchain/llms/openai";
 import { PromptTemplate } from "langchain/prompts";
-import { LLMChain } from "langchain/chains";
+import { LLMChain } from "langchain/chains"; 
 import axios from "axios";
 
 export async function POST(request: NextRequest, res: NextResponse) {
@@ -21,6 +21,9 @@ export async function POST(request: NextRequest, res: NextResponse) {
     const res = await CompleteAssignment.findOne({
       assignmentId: new ObjectId(currecntAssignment._id),
     });
+    const res2 = await Users.findOne({
+      email:email,
+    });
     console.log(res, "YOUY");
     
     const currentDate = new Date();
@@ -31,7 +34,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
     const formattedDate = `${year}-${month}-${day}`;
 
     // Your GitHub Personal Access Token
-    const githubToken = process.env.PERSONAL_ACCESS_TOKEN;
+    const githubToken = res2!.personalAccessToken
 
     // GitHub repository details
     const owner = "tarunpahade";

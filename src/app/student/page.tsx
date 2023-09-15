@@ -94,7 +94,23 @@ const Student = () => {
 
         setSelectedOption(e);
     };
+    const updateDatabase = async ({e,repoLink}: {e:assignments,repoLink:String}) => {
+        console.log(e);
 
+        try {
+            
+
+            const response = await axios.post('api/users/completeAssignment', { repoLink: repoLink, currecntAssignment: e, email })
+            console.log(response);
+
+        } catch (error: any) {
+            console.log(error);
+
+        }
+
+
+
+    }
     //merge this while subbmiting repo
     const handleButtonClick = async (person: assignments) => {
         setLoading(true);
@@ -145,7 +161,7 @@ const Student = () => {
 
                 <ul role="list" className="divide-y mt-10 divide-gray-100">
 
-                    <AssignmentsList viewResult={viewResult} loading={loading} result={result} handleButtonClick={handleButtonClick} userType='Student' data={filteredAssignments} />
+                    <AssignmentsList updateDatabase={updateDatabase} viewResult={viewResult} loading={loading} result={result} handleButtonClick={handleButtonClick} userType='Student' data={filteredAssignments} />
                 </ul>
 
             </div>

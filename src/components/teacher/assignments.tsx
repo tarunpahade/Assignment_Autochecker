@@ -6,7 +6,7 @@ import { ExternalLink } from 'react-feather';
 import ListOfRepos from '../student/repoList';
 import { useSession } from 'next-auth/react';
 
-export const AssignmentsList: React.FC<any> = ({ loading, result, handleButtonClick, viewResult, data, userType }) => {
+export const AssignmentsList: React.FC<any> = ({ loading, result, handleButtonClick,updateDatabase, viewResult, data, userType }) => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { data: session } = useSession()
     const [repos, setRepos] = useState([]);
@@ -40,14 +40,14 @@ export const AssignmentsList: React.FC<any> = ({ loading, result, handleButtonCl
         fetchRepos();
     }, []);
 
-    const updateDatabase = async (e: assignments) => {
+    const updateDatabase2 = async (e: assignments) => {
         console.log(e);
 
         try {
             console.log(selected);
-
-            const response = await axios.post('api/users/completeAssignment', { repoLink: selected.url, currecntAssignment: e, email })
-            console.log(response);
+            updateDatabase({e:e,repoLink: selected.url})
+            // const response = await axios.post('api/users/completeAssignment', { repoLink: selected.url, currecntAssignment: e, email })
+            // console.log(response);
 
             //setSucessfullySentMail(true)
 
@@ -111,7 +111,7 @@ export const AssignmentsList: React.FC<any> = ({ loading, result, handleButtonCl
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         console.log('Generating result');
-                                                        updateDatabase(person);
+                                                        updateDatabase2(person);
                                                     }}
                                                 >
                                                     Submit

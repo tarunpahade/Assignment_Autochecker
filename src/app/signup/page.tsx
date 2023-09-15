@@ -11,7 +11,8 @@ export default function SignUp() {
     const router = useRouter()
     const [user, setUser] = useState({
         email: "",
-        password: ""
+        password: "",
+        personalAccessToken: ''
     })
     const [selectedOption, setSelectedOption] = useState('1');
     const [selectedOption1, setSelectedOption1] = useState('DITMS');
@@ -19,7 +20,7 @@ export default function SignUp() {
     const [teacher, setteacher] = useState(false)
     const [hideMain, sethideMain] = useState(false)
     const [selectedOption2, setSelectedOption2] = useState('Student');
-const [userAlreadyExists, setuserAlreadyExists] = useState(false)
+    const [userAlreadyExists, setuserAlreadyExists] = useState(false)
 
     const handleSignUp = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -41,24 +42,24 @@ const [userAlreadyExists, setuserAlreadyExists] = useState(false)
 
     }
     const signUpStudent = async () => {
-        const data:SignUp = {
-            email: user.email,
-            password: user.password,
+        const data: SignUp = {
+            ...user,
             userType: selectedOption2,
             year: selectedOption,
             institute: selectedOption1
         }
-try {
- 
-    const response = await axios.post("api/users/signup", data);
-    console.log(response);
+        try {
 
-    router.push('/login')
-   
-} catch (error:any) {
-    console.log(error,'This is Err ');
-    setuserAlreadyExists(true)
-}}
+            const response = await axios.post("api/users/signup", data);
+            console.log(response);
+
+            router.push('/login')
+
+        } catch (error: any) {
+            console.log(error, 'This is Err ');
+            setuserAlreadyExists(true)
+        }
+    }
 
 
     const handleSelectChange1 = (e: any) => {
@@ -160,8 +161,8 @@ try {
                                     </div>
                                 </div>
 
-                            </div>  
-                               <div>
+                            </div>
+                            <div>
 
 
                                 <button
@@ -187,7 +188,7 @@ try {
                                 </label>
                                 <div className="mt-2">
                                     <input
-                                    
+
                                         id="email"
                                         name="email"
                                         type="email"
@@ -220,6 +221,48 @@ try {
                                 </div>
 
                             </div>
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <label htmlFor="password" className="block text-sm font-medium leading-6 ">
+                                        Enter Password
+                                    </label>
+
+                                </div>
+                                <div className="mt-2">
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        onChange={(e) => setUser({ ...user, password: e.target.value })}
+                                        required
+                                        className="block w-full p-2 rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+
+                            </div>
+
+                            <div>
+                                <div className="flex items-center justify-between">
+                                    <label htmlFor="token" className="block text-sm font-medium leading-6 ">
+                                        Enter Personal Access Token
+                                    </label>
+
+                                </div>
+                                <div className="mt-2">
+                                    <input
+                                        id="token"
+                                        name="token"
+                                        type="text"
+                                        autoComplete="current-password"
+                                        onChange={(e) => setUser({ ...user, personalAccessToken: e.target.value })}
+                                        required
+                                        className="block w-full p-2 rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+
+                            </div>
+
 
                             <div>
                                 <label htmlFor="dueDate" className="block text-sm font-medium leading-6 text-gray-900">
