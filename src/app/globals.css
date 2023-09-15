@@ -1,0 +1,26 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.myComponent:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Dark mode */
+  body.dark .myComponent {
+    background-color: #000000;
+  }
+  
+  body.dark .myComponent:hover {
+    background-color: #333333;
+  }
+
+  .response-bg {
+    background-color: rgb(45, 109, 210); /* Dark blue background color */
+    color: 'white'; /* White text color */
+    
+    padding: 20px; /* Add padding for spacing */
+    border-radius: 8px; /* Add rounded corners for aesthetics */
+  }
