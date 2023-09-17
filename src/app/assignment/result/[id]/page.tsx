@@ -1,16 +1,8 @@
 'use client'
-
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
-import { assignments } from '@/types/interface';
 import axios from 'axios';
 import Image from 'next/image'
 
-interface Student {
-    email: string,
-    repoLink: string,
-    date: string
-}
 const Page = ({ params }: any) => {
 
     const _id = params.id

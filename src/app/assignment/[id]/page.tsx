@@ -1,13 +1,14 @@
-'use client'
-
+"use client";
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import Image from 'next/image'
 
-const Page = ({ params }: any) => {
-
-    const _id = params.id
+const Page = () => {
+    const router = useRouter();
+    
+    const { _id } = router.query;
+    //const _id = params.id || '1234'  
 
     const [assignments, setAssignments] = useState(
         {
@@ -21,8 +22,7 @@ const Page = ({ params }: any) => {
         }
     )
     const [students, setstudents]: any[] = useState([])
-    console.log(students, 'this is stewie');
-    const router = useRouter();
+  
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -30,15 +30,15 @@ const Page = ({ params }: any) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log('starting to featch');
+            
 
                 const response = await axios.post('/api/users/assignmentWithId', { id: _id }); // Replace with your API endpoint
-                console.log(response, 'this is response');
+          
 
                 setAssignments(response.data.assignment);
                 console.log(response.data.count, response);
                 if (typeof response.data.studentsWhoHaveCompleted === 'object') {
-                    console.log('this is a object');
+
 
                     setstudents([response.data.studentsWhoHaveCompleted])
 
