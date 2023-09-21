@@ -5,6 +5,7 @@ import axios from 'axios';
 import { assignments } from '@/types/interface';
 import { AssignmentsList } from '@/components/teacher/assignments';
 import { useRouter } from 'next/navigation';
+import GPTresponse from '@/components/aiResponse';
 
 const Student = () => {
     const router = useRouter();
@@ -17,6 +18,10 @@ const Student = () => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
     const [dataNull, setdataNull] = useState(false)
+
+    const [gpt, setGpt] = useState(false);
+    const [response, setResponse] = useState('');
+
 
     const [selectedOption, setSelectedOption] = useState('all');
     let filteredAssignments;
@@ -94,11 +99,11 @@ const Student = () => {
 
         setSelectedOption(e);
     };
-    const updateDatabase = async ({e,repoLink}: {e:assignments,repoLink:String}) => {
+    const updateDatabase = async ({ e, repoLink }: { e: assignments, repoLink: String }) => {
         console.log(e);
 
         try {
-            
+
 
             const response = await axios.post('api/users/completeAssignment', { repoLink: repoLink, currecntAssignment: e, email })
             console.log(response);
@@ -131,41 +136,49 @@ const Student = () => {
         }
     };
     const viewResult = (result2: string) => {
-        localStorage.setItem('result', result2!);
-        router.push('/result')
+        setResponse(result2!)
+        setGpt(true)
     }
+    
+const goBack =()=>{
+    setGpt(false)
+}
     return (
 
         <main>
-            <div className="mx-auto max-w-6xl py-6 sm:px-6 lg:px-8">
 
-                <div className="flex justify-between">
-                    <h1 className={`text-2xl font-bold tracking-tight   `}>
-                        Assignments Uploaded By Class Teacher
-                    </h1>
-                    <div>
+            {gpt ? <GPTresponse data={response} goBack={goBack} /> : (
+
+                <div className="mx-auto max-w-6xl py-6 sm:px-6 lg:px-8">
+
+                    <div className="flex justify-between">
+                        <h1 className={`text-2xl font-bold tracking-tight   `}>
+                            Assignments Uploaded By Class Teacher
+                        </h1>
+                        <div>
 
 
-                        <div className="pointer-events-auto flex divide-x divide-slate-400/20 overflow-hidden rounded-md bg-white text-[0.8125rem] font-medium leading-5 text-slate-700 shadow-sm ring-1 ring-slate-700/10">
-                            <div className={`px-4 py-2   ${selectedOption === '0' ? 'bg-blue-700 text-white' : ''}`} onClick={() => handleSelectChange('0')}>Complete</div>
-                            <div className={`px-4 py-2   ${selectedOption === '1' ? 'bg-blue-700 text-white' : ''}`} onClick={() => handleSelectChange('1')}>InComplete</div>
-                            <div className={`px-4 py-2   ${selectedOption === 'all' ? 'bg-blue-700 text-white' : ''}`} onClick={() => handleSelectChange('all')}>all</div>
+                            <div className="pointer-events-auto flex divide-x divide-slate-400/20 overflow-hidden rounded-md bg-white text-[0.8125rem] font-medium leading-5 text-slate-700 shadow-sm ring-1 ring-slate-700/10">
+                                <div className={`px-4 py-2   ${selectedOption === '0' ? 'bg-blue-700 text-white' : ''}`} onClick={() => handleSelectChange('0')}>Complete</div>
+                                <div className={`px-4 py-2   ${selectedOption === '1' ? 'bg-blue-700 text-white' : ''}`} onClick={() => handleSelectChange('1')}>InComplete</div>
+                                <div className={`px-4 py-2   ${selectedOption === 'all' ? 'bg-blue-700 text-white' : ''}`} onClick={() => handleSelectChange('all')}>all</div>
+
+                            </div>
 
                         </div>
-
                     </div>
+
+
+
+
+                    <ul role="list" className="divide-y mt-10 divide-gray-100">
+
+                        <AssignmentsList updateDatabase={updateDatabase} viewResult={viewResult} loading={loading} result={result} handleButtonClick={handleButtonClick} userType='Student' data={filteredAssignments} />
+                    </ul>
+
                 </div>
-
-
-
-
-                <ul role="list" className="divide-y mt-10 divide-gray-100">
-
-                    <AssignmentsList updateDatabase={updateDatabase} viewResult={viewResult} loading={loading} result={result} handleButtonClick={handleButtonClick} userType='Student' data={filteredAssignments} />
-                </ul>
-
-            </div>
-
+            )
+            }
         </main>
 
     )

@@ -2,12 +2,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import axios from 'axios'
-import { useSession, signIn, signOut } from "next-auth/react"
-import { redirect, useRouter } from "next/navigation";
-import { GoogleLogin } from "@react-oauth/google";
-import Google from "next-auth/providers/google";
-import Users from "@/dbconfig/dbconfig";
-import { SignUp } from "@/types/interface";
+import {  signIn } from "next-auth/react"
+import {  useRouter } from "next/navigation";
 
 export default function Login() {
 
@@ -100,7 +96,7 @@ export default function Login() {
 
 
     return (
-        <>
+        <div className="absolute top-0 w-full h-full bg-white">
             {forgetPassword ? (
                 //class to flex-direction:column
 
@@ -327,6 +323,6 @@ export default function Login() {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     )
 }

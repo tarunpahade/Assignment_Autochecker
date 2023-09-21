@@ -4,11 +4,9 @@ import { Inter } from 'next/font/google'
 import { NextAuthProvider } from './providers'
 import { ThemeProvider } from 'next-themes';
 import Navbar from '@/components/navbar'
-import { redirect, usePathname } from 'next/navigation'
-import Users from '@/dbconfig/dbconfig'
-import { useEffect } from 'react'
-const inter = Inter({ subsets: ['latin'] })
+import { useRouter } from 'next/navigation'
 
+//theme provider is causing errors of creater cpontext
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Welcome to Next.js',
@@ -19,29 +17,25 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
-
-const showHeader = pathname === '/login' || pathname === '/signup' || pathname === 'setup' ? false : true;
-
-console.log(pathname, showHeader, 'This is true or false');
-
-console.log(pathname,showHeader,'This is true or false');
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+    
       
       <NextAuthProvider>
-      <ThemeProvider attribute="class">
+     
+      <body >
       <div className="min-h-full"   >
-      {showHeader &&   <Navbar />}
+        <Navbar />
       
         {children}
         </div>
-        </ThemeProvider>
-        </NextAuthProvider>
         
+
         </body>
+        </NextAuthProvider>
+       
+        
     </html>
   )
 }

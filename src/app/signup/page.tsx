@@ -1,10 +1,8 @@
 'use client';
 
 import axios from "axios";
-import Image from "next/image";
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
-import { signIn, useSession, } from "next-auth/react";
+import {  useRouter } from "next/navigation";
 import { SignUp } from "@/types/interface";
 
 export default function SignUp() {
@@ -76,7 +74,8 @@ export default function SignUp() {
         setSelectedOption(selectedValue);
     };
     return (
-        <>
+        <div className="absolute top-0 w-full h-full bg-white">
+        
 
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -317,6 +316,6 @@ export default function SignUp() {
                     {userAlreadyExists === true ? <label className="block text-sm font-medium leading-6 mt-5 "> User Already Exists Login !!!</label> : null}
                 </div>
             </div>
-        </>
+        </div>
     )
 }

@@ -1,53 +1,32 @@
-"use client";
+'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Image from 'next/image'
 import { assignments as MyAssignments } from '@/types/interface';
-
-
-export async function getStaticProps(): Promise<{
-    props: {
-        assignments: MyAssignments[]; 
-    };
-}> {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const router = useRouter()
-    const { _id } = router.query;
-
-
-    // Fetch all assignments here
-    const response: MyAssignments[] = await axios.post('/api/users/assignmentWithId', { id: _id }); // Replace with your API endpoint
-
-    return {
-        props: {
-            assignments: response,
-        },
-    };
-}
+import GPTresponse from '@/components/aiResponse';
 
 
 
-
-const Page = ({ assignments }: any) => {
+const Page = ({ params }: any) => {
     const router = useRouter();
+    const _id = params.id
 
-    const { _id } = router.query;
-    //const _id = params.id || '1234'  
-
-    // const [assignments, setAssignments] = useState(
-    //     {
-    //         name: "Create a Html Form For a Travel Website",
-    //         description: "A HTML form using html,css In Vscode editor.",
-    //         image: "https://www.formsite.com/wp-content/uploads/2023/05/travel-preference@2x.jpg",
-    //         dueDate: "7 August",
-    //         dateUploaded: "19 August",
-    //         _id: '123456',
-    //         repoLink: 'https://github.com/DITMS/Create-a-html-form-in-DITMS'
-    //     }
-    // )
+    const [assignments, setAssignments] = useState(
+        {
+            name: "Create a Html Form For a Travel Website",
+            description: "A HTML form using html,css In Vscode editor.",
+            image: "https://www.formsite.com/wp-content/uploads/2023/05/travel-preference@2x.jpg",
+            dueDate: "7 August",
+            dateUploaded: "19 August",
+            _id: '123456',
+            repoLink: 'https://github.com/DITMS/Create-a-html-form-in-DITMS'
+        }
+    )
     const [students, setstudents]: any[] = useState([])
 
+    const [gpt, setGpt] = useState(false);
+    const [response, setResponse] = useState('');
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -60,7 +39,7 @@ const Page = ({ assignments }: any) => {
                 const response = await axios.post('/api/users/assignmentWithId', { id: _id }); // Replace with your API endpoint
 
 
-                //     setAssignments(response.data.assignment);
+                setAssignments(response.data.assignment);
                 console.log(response.data.count, response);
                 if (typeof response.data.studentsWhoHaveCompleted === 'object') {
 
@@ -78,7 +57,7 @@ const Page = ({ assignments }: any) => {
             }
         };
 
-        // fetchData();
+        fetchData();
     }, [_id]); // The empty array as the second argument ensures the effect runs only once after the initial render
 
     if (loading) {
@@ -90,107 +69,116 @@ const Page = ({ assignments }: any) => {
     }
 
     const viewResult = (result2: string) => {
-        localStorage.setItem('result', result2!);
-        router.push('/result')
+        setResponse(result2!)
+        setGpt(true)
+
     }
-
+const goBack =()=>{
+    setGpt(false)
+}
     return (
-        <ul role="list" className="w-full  divide-gray-100">
+        <div>
+            {gpt ? <GPTresponse data={response} goBack={goBack} /> : (
+                <ul role="list" className="w-full  divide-gray-100">
+
+                    <li key={Math.random()}>
+                        <a href="#" className="block hover:bg-gray-50">
+                            <div className="px-4 py-4 sm:px-6">
+                                <div className="flex items-center justify-between">
+                                    <a href={assignments.repoLink} className="truncate text-sm font-medium text-indigo-600">{assignments.name}</a>
 
 
-            <li key={Math.random()}>
-                <a href="#" className="block hover:bg-gray-50">
-                    <div className="px-4 py-4 sm:px-6">
-                        <div className="flex items-center justify-between">
-                            <a href={assignments.repoLink} className="truncate text-sm font-medium text-indigo-600">{assignments.name}</a>
+                                </div>
+                                <div className="mt-2 flex justify-between">
+                                    <div className="sm:flex">
+                                        <div className="mr-6 flex items-center text-sm text-gray-500">
 
+                                            Day Uploaded   {assignments.dueDate}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-500">
 
-                        </div>
-                        <div className="mt-2 flex justify-between">
-                            <div className="sm:flex">
-                                <div className="mr-6 flex items-center text-sm text-gray-500">
-
-                                    Day Uploaded   {assignments.dueDate}
+                                        Submission Date {assignments.dateUploaded}
+                                    </div>
                                 </div>
                             </div>
-                            <div className="flex items-center text-sm text-gray-500">
+                        </a>
+                    </li >
 
-                                Submission Date {assignments.dateUploaded}
-                            </div>
-                        </div>
+
+                    <div className="px-4 py-4 sm:px-6 mt-2 ">
+                        <p>{assignments.description}</p> <a className='text-blue-500 underline' href={assignments.repoLink}> Click Here  to visit submitted  Repository</a>
+
                     </div>
-                </a>
-            </li>
+                    <div className='mx-auto max-w-6xl py-6 sm:px-6 lg:px-8 h-[30%] overflow-auto'>
+                        <Image alt='Assignment Image' className='w-[30%]  mx-[10%]' src={assignments.image} width={300} height={300} />
 
 
-            <div className="px-4 py-4 sm:px-6 mt-2 ">
-                <p>{assignments.description}</p> <a className='text-blue-500 underline' href={assignments.repoLink}> Click Here  to visit submitted  Repository</a>
-
-            </div>
-            <div className='mx-auto max-w-6xl py-6 sm:px-6 lg:px-8 h-[30%] overflow-auto'>
-                <Image alt='Assignment Image' className='w-[30%]  mx-[10%]' src={assignments.image} width={300} height={300} />
-
-
-            </div>
-            {students ? (
-                <>
-                    <h1 className='mt-8 pl-3 text-black-900 text-2xl'>Subbmitted By</h1>
-                    {students.map((students: any) => (
+                    </div>
+                    {
+                        students ? (
+                            <>
+                                <h1 className='mt-8 pl-3 text-black-900 text-2xl'>Subbmitted By</h1>
+                                {students.map((students: any) => (
 
 
 
-                        <li key={Math.random()}>
+                                    <li key={Math.random()}>
 
-                            <a href="#" className="block hover:bg-gray-50">
-                                <div className="px-4 py-4 sm:px-6">
-                                    <div className="flex items-center justify-between">
-                                        <a href={students.repoLink} className="truncate text-sm font-medium text-indigo-600">{students.email}</a>
+                                        <a href="#" className="block hover:bg-gray-50">
+                                            <div className="px-4 py-4 sm:px-6">
+                                                <div className="flex items-center justify-between">
+                                                    <a href={students.repoLink} className="truncate text-sm font-medium text-indigo-600">{students.email}</a>
 
-                                    </div>
-                                    <div className="mt-2 flex justify-between">
-                                        <div className="sm:flex">
-                                            <div className="mr-6 flex items-center text-sm text-gray-500">
+                                                </div>
+                                                <div className="mt-2 flex justify-between">
+                                                    <div className="sm:flex">
+                                                        <div className="mr-6 flex items-center text-sm text-gray-500">
 
-                                                Day Uploaded   {students.date}
+                                                            Day Uploaded   {students.date}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center text-sm text-gray-500">
+
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                console.log('View Result');
+                                                                // Handle the "View Result" action here.
+                                                                viewResult('Featch result for Email ' + students.email + ' for assignment  ' + students.email + students.result)
+                                                            }}
+                                                            className={`mr-5 lg:text-[12px] text-[12px] text-white bg-black px-3 py-2 rounded-md mt-2 ml-4 `}
+                                                            style={{
+                                                                backgroundColor: 'black',
+                                                                color: 'white',
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            View Result
+                                                        </button>
+
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center text-sm text-gray-500">
+                                        </a>
+                                    </li>
 
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    console.log('View Result');
-                                                    // Handle the "View Result" action here.
-                                                    viewResult('Featch result for Email ' + students.email + ' for assignment  ' + students.email + students.result)
-                                                }}
-                                                className={`mr-5 lg:text-[12px] text-[12px] text-white bg-black px-3 py-2 rounded-md mt-2 ml-4 `}
-                                                style={{
-                                                    backgroundColor: 'black',
-                                                    color: 'white',
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                View Result
-                                            </button>
+                                ))
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                                }
+                            </>
 
-                    ))
+                        ) : null
 
                     }
-                </>
+                </ul>
 
-            ) : null
+            )
 
             }
+        </div>
 
 
-
-        </ul>
 
 
 
