@@ -9,7 +9,10 @@ import Users from '@/dbconfig/dbconfig'
 import { useEffect } from 'react'
 const inter = Inter({ subsets: ['latin'] })
 
-
+export const metadata: Metadata = {
+  title: 'Home',
+  description: 'Welcome to Next.js',
+}
 
 export default function RootLayout({
   children,

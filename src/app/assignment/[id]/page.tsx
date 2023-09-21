@@ -3,26 +3,51 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Image from 'next/image'
+import { assignments as MyAssignments } from '@/types/interface';
 
-const Page = () => {
+
+export async function getStaticProps(): Promise<{
+    props: {
+        assignments: MyAssignments[]; 
+    };
+}> {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const router = useRouter()
+    const { _id } = router.query;
+
+
+    // Fetch all assignments here
+    const response: MyAssignments[] = await axios.post('/api/users/assignmentWithId', { id: _id }); // Replace with your API endpoint
+
+    return {
+        props: {
+            assignments: response,
+        },
+    };
+}
+
+
+
+
+const Page = ({ assignments }: any) => {
     const router = useRouter();
-    
+
     const { _id } = router.query;
     //const _id = params.id || '1234'  
 
-    const [assignments, setAssignments] = useState(
-        {
-            name: "Create a Html Form For a Travel Website",
-            description: "A HTML form using html,css In Vscode editor.",
-            image: "https://www.formsite.com/wp-content/uploads/2023/05/travel-preference@2x.jpg",
-            dueDate: "7 August",
-            dateUploaded: "19 August",
-            _id: '123456',
-            repoLink: 'https://github.com/DITMS/Create-a-html-form-in-DITMS'
-        }
-    )
+    // const [assignments, setAssignments] = useState(
+    //     {
+    //         name: "Create a Html Form For a Travel Website",
+    //         description: "A HTML form using html,css In Vscode editor.",
+    //         image: "https://www.formsite.com/wp-content/uploads/2023/05/travel-preference@2x.jpg",
+    //         dueDate: "7 August",
+    //         dateUploaded: "19 August",
+    //         _id: '123456',
+    //         repoLink: 'https://github.com/DITMS/Create-a-html-form-in-DITMS'
+    //     }
+    // )
     const [students, setstudents]: any[] = useState([])
-  
+
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -30,12 +55,12 @@ const Page = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-            
+
 
                 const response = await axios.post('/api/users/assignmentWithId', { id: _id }); // Replace with your API endpoint
-          
 
-                setAssignments(response.data.assignment);
+
+                //     setAssignments(response.data.assignment);
                 console.log(response.data.count, response);
                 if (typeof response.data.studentsWhoHaveCompleted === 'object') {
 
@@ -53,7 +78,7 @@ const Page = () => {
             }
         };
 
-        fetchData();
+        // fetchData();
     }, [_id]); // The empty array as the second argument ensures the effect runs only once after the initial render
 
     if (loading) {
@@ -136,7 +161,7 @@ const Page = () => {
                                                     e.preventDefault();
                                                     console.log('View Result');
                                                     // Handle the "View Result" action here.
-                                                    viewResult('Featch result for Email ' + students.email + ' for assignment  ' + students.email +  students.result)
+                                                    viewResult('Featch result for Email ' + students.email + ' for assignment  ' + students.email + students.result)
                                                 }}
                                                 className={`mr-5 lg:text-[12px] text-[12px] text-white bg-black px-3 py-2 rounded-md mt-2 ml-4 `}
                                                 style={{
@@ -171,4 +196,7 @@ const Page = () => {
 
     )
 }
+
+// pages/assignment/[id]/page.tsx
 export default Page
+

@@ -22,6 +22,10 @@ if (isPublicPath && token) {
  if(!isPublicPath && !token){
     return NextResponse.redirect(new URL('/login',request.nextUrl))
   }
+  if(isPublicPath && token){
+    return NextResponse.redirect(new URL('/assignment',request.nextUrl))
+  }
+
 }
  
 export const config = {
@@ -32,6 +36,9 @@ export const config = {
     '/signup',
     '/reset',
     '/teacher',
-    '/student'
+    '/student',
+    '/assignment',
+    '/assignment/[id]'
+
   ],
 }
