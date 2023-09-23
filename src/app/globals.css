@@ -4,10 +4,6 @@
 @tailwind utilities;
 
 
-.myComponent:hover {
-    background-color: #f0f0f0;
-  }
-  
   /* Dark mode */
   body.dark .myComponent {
     background-color: #000000;

@@ -4,7 +4,6 @@ import { useState } from "react";
 import axios from 'axios'
 import {  signIn } from "next-auth/react"
 import {  useRouter } from "next/navigation";
-
 export default function Login() {
 
     const [user, setUser] = useState({
@@ -37,6 +36,7 @@ export default function Login() {
             })
             console.log(signInResponse);
             console.log(selectedOption2);
+
 
             if (signInResponse && !signInResponse.error) {
                 console.log(selectedOption2);

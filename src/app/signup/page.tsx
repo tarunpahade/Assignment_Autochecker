@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SignUp } from "@/types/interface";
 
 export default function SignUp() {
@@ -10,8 +10,9 @@ export default function SignUp() {
     const [user, setUser] = useState({
         email: "",
         password: "",
-        personalAccessToken: ''
+
     })
+    const [personalAccessToken, setPersonalAccessToken] = useState('')
     const [selectedOption, setSelectedOption] = useState('1');
     const [selectedOption1, setSelectedOption1] = useState('DITMS');
     const [student, setstudent] = useState(false)
@@ -46,6 +47,13 @@ export default function SignUp() {
             year: selectedOption,
             institute: selectedOption1
         }
+        if(selectedOption2==='teacher'){
+            if(!personalAccessToken){
+                alert('Please Enter Personal accres token')
+                return;
+            }
+            data.personalAccessToken=personalAccessToken
+        }
         try {
 
             const response = await axios.post("api/users/signup", data);
@@ -75,7 +83,7 @@ export default function SignUp() {
     };
     return (
         <div className="absolute top-0 w-full h-full bg-white">
-        
+
 
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -126,7 +134,31 @@ export default function SignUp() {
                                     </div>
                                 </div>
 
+                                {selectedOption2 === 'teacher' ? (
 
+                                    <div className="mt-4">
+                                        <div className="flex items-center justify-between">
+                                            <label htmlFor="token" className="block text-sm font-medium leading-6 ">
+                                                Enter Personal Access Token
+                                            </label>
+
+                                        </div>
+                                        <div className="mt-2">
+                                            <input
+                                                id="token"
+                                                name="token"
+                                                type="text"
+                                                autoComplete="current-password"
+                                                onChange={(e) => setPersonalAccessToken(e.target.value)}
+                                                value={personalAccessToken}
+                                                className="block w-full p-2 rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                            />
+                                        </div>
+
+                                    </div>
+                                ) : null
+
+                                }
                                 <div className="mt-4">
                                     <label htmlFor="dueDate" className="block text-sm font-medium leading-6 text-gray-900">
                                         Select Institute
@@ -220,47 +252,8 @@ export default function SignUp() {
                                 </div>
 
                             </div>
-                            <div>
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="password" className="block text-sm font-medium leading-6 ">
-                                        Enter Password
-                                    </label>
 
-                                </div>
-                                <div className="mt-2">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        autoComplete="current-password"
-                                        onChange={(e) => setUser({ ...user, password: e.target.value })}
-                                        required
-                                        className="block w-full p-2 rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    />
-                                </div>
 
-                            </div>
-
-                            <div>
-                                <div className="flex items-center justify-between">
-                                    <label htmlFor="token" className="block text-sm font-medium leading-6 ">
-                                        Enter Personal Access Token
-                                    </label>
-
-                                </div>
-                                <div className="mt-2">
-                                    <input
-                                        id="token"
-                                        name="token"
-                                        type="text"
-                                        autoComplete="current-password"
-                                        onChange={(e) => setUser({ ...user, personalAccessToken: e.target.value })}
-                                        required
-                                        className="block w-full p-2 rounded-md border-0 py-1.5  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    />
-                                </div>
-
-                            </div>
 
 
                             <div>

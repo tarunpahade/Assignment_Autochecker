@@ -15,7 +15,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
     console.log("Hello Boys");
 
     const req = await request.json();
-    const { repoLink, currecntAssignment, email } = req;
+    const {  currecntAssignment, email, submittedCode} = req;
     console.log(req, currecntAssignment._id);
 
     const res = await CompleteAssignment.findOne({
@@ -33,36 +33,6 @@ export async function POST(request: NextRequest, res: NextResponse) {
 
     const formattedDate = `${year}-${month}-${day}`;
 
-    // Your GitHub Personal Access Token
-    const githubToken = res2!.personalAccessToken
-
-    // GitHub repository details
-    const owner = "tarunpahade";
-    const repo = "html";
-    const branch = "main"; // or any other branch you want to access
-    const pathToFile = "public/index.html"; // Path to the file you want to retrieve
-
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${pathToFile}?ref=${branch}`;
-
-    const headers = {
-      Authorization: `Bearer ${githubToken}`,
-    };
-    const fileContent = await axios
-      .get(apiUrl, { headers })
-      .then((response: any) => {
-        console.log(response.data);
-
-        const fileContent = Buffer.from(
-          response.data.content,
-          "base64"
-        ).toString("utf-8");
-        console.log(fileContent);
-        return fileContent;
-      })
-      .catch((error: any) => {
-        console.error("Error fetching file:", error);
-      });
-
     
     const model = new OpenAI({ temperature: 0 });
     const template =
@@ -76,7 +46,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
     const assignment = currecntAssignment.name;
     const result = await chain.call({
       Assignment: assignment,
-      Code: fileContent,
+      Code: 'Assignment name '+assignment+' Code Subbmited by user '+submittedCode,
     });
     console.log(result.text);
 
@@ -85,9 +55,9 @@ export async function POST(request: NextRequest, res: NextResponse) {
     const newCount = res!.completedCount++;
     const userCount = {
       email,
-      repoLink,
       date:formattedDate,
-      result:result.text
+      result:result.text,
+      submittedCode
     };
 
 
@@ -122,8 +92,39 @@ export async function POST(request: NextRequest, res: NextResponse) {
     }
     console.log(finalResponse);
 
-    console.log(repoLink, currecntAssignment.name);
+    console.log( currecntAssignment.name);
     
+    ///  Get Repo Information For later
+     // // Your GitHub Personal Access Token
+    // const githubToken = res2!.personalAccessToken
+
+    // // GitHub repository details
+    // const owner = "tarunpahade";
+    // const repo = "html";
+    // const branch = "main"; // or any other branch you want to access
+    // const pathToFile = "public/index.html"; // Path to the file you want to retrieve
+
+    // const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${pathToFile}?ref=${branch}`;
+
+    // const headers = {
+    //   Authorization: `Bearer ${githubToken}`,
+    // };
+    // const fileContent = await axios
+    //   .get(apiUrl, { headers })
+    //   .then((response: any) => {
+    //     console.log(response.data);
+
+    //     const fileContent = Buffer.from(
+    //       response.data.content,
+    //       "base64"
+    //     ).toString("utf-8");
+    //     console.log(fileContent);
+    //     return fileContent;
+    //   })
+    //   .catch((error: any) => {
+    //     console.error("Error fetching file:", error);
+    //   });
+
 
 
     return NextResponse.json(finalResponse);

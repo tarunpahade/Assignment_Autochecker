@@ -20,7 +20,7 @@ redirect('/login')
         {status === 'authenticated' ? (
           <>
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-              UserNAME: {session?.user?.name}
+              UserNAME: {session?.user?.email}
 
               <Image src={session?.user?.image!} alt="User Image" height={9} width={9} />
             </h2>

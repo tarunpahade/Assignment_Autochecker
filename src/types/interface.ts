@@ -4,7 +4,7 @@ export interface SignUp  {
     userType: string,
     year: string,
     institute: string,
-    personalAccessToken:string
+    personalAccessToken?:string,
 }
 
 
@@ -21,13 +21,14 @@ export interface assignments {
     description:string,
     dateUploaded: string,
     submissionDate: string,
-    image: string,
+    image?: string,
     uploadedBy: string,
     forYear:string,
     _id?:string,
     repoLink?:string,
     markedAs?:string,
-    result?:string
+    result?:string,
+    uploadType?:string,
 }
 
 export interface completeAssignments{

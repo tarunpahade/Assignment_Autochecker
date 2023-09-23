@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import { cookies } from 'next/headers'
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
@@ -20,21 +21,19 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(
-        credentials:any
-      ) {
-        
+      async authorize(credentials: any) {
         if (!credentials || !credentials.email || !credentials.password) {
           return null;
         }
 
         const email = credentials?.email as string;
         const password = credentials?.password as string;
-        const userType= credentials?.userType as string;
+        const userType = credentials?.userType as string;
 
         console.log(email, password);
         console.log(credentials);
-
+        const oneDay = 24 * 60 * 60 * 1000
+        cookies().set('userRole', userType)
         const user = await Users.findOne({ email });
 
         if (!user) {
@@ -42,13 +41,12 @@ export const authOptions: NextAuthOptions = {
 
           return null;
         }
-        if(user.userType.toUpperCase() !== userType.toUpperCase() ){
-          console.log(userType,user.userType);
-          
+        if (user.userType.toUpperCase() !== userType.toUpperCase()) {
+          console.log(userType, user.userType);
+
           console.log("UserType Specified Not Correct ");
 
           return null;
-          
         }
 
         const vaildPassword = await bcryptjs.compare(password, user.password);
@@ -56,15 +54,13 @@ export const authOptions: NextAuthOptions = {
 
         if (vaildPassword) {
           console.log("Hurray Valid Pass");
-          
-      
+
           return user;
         }
         return {
-  user        
-        } as any
-        
-      } 
+          user,
+        } as any;
+      },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,

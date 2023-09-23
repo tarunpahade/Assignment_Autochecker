@@ -29,7 +29,7 @@ const Student = () => {
     if (selectedOption === 'all') {
         filteredAssignments = repo;
     } else if (selectedOption === '1') {
-        filteredAssignments = repo.filter((item: any) => item.markedAs === 'incomplete');
+        filteredAssignments = repo.filter((item: any) => item.markedAs === 'Incomplete');
     } else if (selectedOption === '0') {
         filteredAssignments = repo.filter((item: any) => item.markedAs === 'complete');
     } else {
@@ -99,13 +99,13 @@ const Student = () => {
 
         setSelectedOption(e);
     };
-    const updateDatabase = async ({ e, repoLink }: { e: assignments, repoLink: String }) => {
+    const updateDatabase = async ({ e, submittedCode }: { e: assignments, submittedCode : String }) => {
         console.log(e);
 
         try {
 
 
-            const response = await axios.post('api/users/completeAssignment', { repoLink: repoLink, currecntAssignment: e, email })
+            const response = await axios.post('api/users/completeAssignment', {submittedCode , currecntAssignment: e, email })
             console.log(response);
 
         } catch (error: any) {

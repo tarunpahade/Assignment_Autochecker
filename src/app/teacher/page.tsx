@@ -4,6 +4,8 @@ import { AssignmentsList } from "@/components/teacher/assignments"
 import { assignments } from "@/types/interface"
 
 import axios from "axios"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 
 
@@ -12,10 +14,14 @@ export default function Example() {
   const [selectedOption, setSelectedOption] = useState('all');
   const [assignments, setAssignments] = useState<assignments[]>([]);
   const [dataNull, setdataNull] = useState(false)
-
+  const { status } = useSession()
+  const { data: session } = useSession()
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  
+  const email = session?.user.email
+console.log(session?.user,'this is the email');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +46,12 @@ export default function Example() {
     fetchData();
   }, []); 
 
+  if(status === 'unauthenticated'){
+  
+    redirect('/login')
+  
+    
+    }
   if (loading) {
     return <p>Loading...</p>;
   }

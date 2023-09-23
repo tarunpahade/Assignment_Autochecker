@@ -1,16 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Image from 'next/image'
-import { assignments as MyAssignments } from '@/types/interface';
 import GPTresponse from '@/components/aiResponse';
-import { text } from 'stream/consumers';
 
 
 
 const Page = ({ params }: any) => {
-    const router = useRouter();
     const _id = params.id
 
     const [assignments, setAssignments] = useState(
@@ -24,7 +20,6 @@ const Page = ({ params }: any) => {
             repoLink: 'https://github.com/DITMS/Create-a-html-form-in-DITMS'
         }
     )
-    const [students, setstudents]: any[] = useState([])
 
     const [gpt, setGpt] = useState(false);
     const [response, setResponse] = useState('');
@@ -42,13 +37,7 @@ const Page = ({ params }: any) => {
 
                 setAssignments(response.data.assignment);
                 console.log(response.data.count, response);
-                if (typeof response.data.studentsWhoHaveCompleted === 'object') {
-
-
-                    setstudents([response.data.studentsWhoHaveCompleted])
-
-                }
-                setstudents(response.data.studentsWhoHaveCompleted)
+                
                 setLoading(false);
             } catch (error: any) {
                 console.log(error.message);
@@ -69,11 +58,7 @@ const Page = ({ params }: any) => {
         return <p>Some Error While Featching Assignments</p>;
     }
 
-    const viewResult = (result2: string) => {
-        setResponse(result2!)
-        setGpt(true)
-
-    }
+    
 const goBack =()=>{
     setGpt(false)
 }
@@ -122,62 +107,7 @@ const goBack =()=>{
 
 
                     </div>
-                    {
-                        students ? (
-                            <>
-                                <h1 className='mt-8 pl-3 text-black-900 text-2xl'>Subbmitted By</h1>
-                                {students.map((students: any) => (
-
-
-
-                                    <li key={Math.random()}>
-
-                                        <a href="#" className="block hover:bg-gray-50">
-                                            <div className="px-4 py-4 sm:px-6">
-                                                <div className="flex items-center justify-between">
-                                                    <a href={students.repoLink} className="truncate text-sm font-medium text-indigo-600">{students.email}</a>
-
-                                                </div>
-                                                <div className="mt-2 flex justify-between">
-                                                    <div className="sm:flex">
-                                                        <div className="mr-6 flex items-center text-sm text-gray-500">
-
-                                                            Day Uploaded   {students.date}
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center text-sm text-gray-500">
-
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                console.log('View Result');
-                                                                // Handle the "View Result" action here.
-                                                                viewResult('Featch result for Email ' + students.email + ' for assignment  ' + students.email + students.result)
-                                                            }}
-                                                            className={`mr-5 lg:text-[12px] text-[12px] text-white bg-black px-3 py-2 rounded-md mt-2 ml-4 `}
-                                                            style={{
-                                                                backgroundColor: 'black',
-                                                                color: 'white',
-                                                                cursor: 'pointer',
-                                                            }}
-                                                        >
-                                                            View Result
-                                                        </button>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-
-                                ))
-
-                                }
-                            </>
-
-                        ) : <text>No One Submitted Assignment Yet</text>
-
-                    }
+                    
                 </ul>
 
             )
@@ -188,6 +118,5 @@ const goBack =()=>{
     )
 }
 
-// pages/assignment/[id]/page.tsx
 export default Page
 

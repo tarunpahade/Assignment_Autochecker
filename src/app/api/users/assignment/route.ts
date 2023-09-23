@@ -18,51 +18,24 @@ interface assignmentsDatabase {
 
 export async function POST(request: NextRequest) {
   try {
-
     const reqBody = await request.json();
     const image = reqBody.image;
-
-    const awsS3link = await uploadBase64Image(image);
-    //const awsS3link ="https://projectimagestorage1.s3.ap-south-1.amazonaws.com/images/my1693832405457Image.jpg"
-
-    reqBody.image = awsS3link;
-    console.log(awsS3link, "this is link for api");
-
-    const octokit = new Octokit({
-      auth: process.env.PERSONAL_ACCESS_TOKEN,
-    });
-    console.log("starting to create repo", process.env.PERSONAL_ACCESS_TOKEN);
-    const sanitizedDescription = reqBody.description.replace(/[\x00-\x1F\x7F]/g, "");
-
-    const createRepoResponse = await octokit.request("POST /orgs/DITMS/repos", {
-      org: "ORG",
-      name: reqBody.name,
-      description: sanitizedDescription,
-      homepage: "https://github.com",
-      private: false,
-      has_issues: true,
-      has_projects: true,
-      has_wiki: true,
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    });
-    console.log(createRepoResponse, "response created");
-
-    const repoName = createRepoResponse.data.name; // Get the repository name
+    if (reqBody.image) {
+      const awsS3link = await uploadBase64Image(image);
+      reqBody.image = awsS3link;
+      console.log(awsS3link, "this is link for api");
+      console.log(reqBody);
+    }
     const datainDatabase: assignmentsDatabase = {
       ...reqBody,
-      repoLink: createRepoResponse.data.html_url,
+      repoLink: "Disabled Github Integration For Now",
     };
     console.log(datainDatabase);
     console.log("Starting to insert in DB");
 
     const res = await Assignments.insertOne(datainDatabase);
 
-
-
     const res3 = await CompleteAssignment.insertOne({
-      assignmentName: repoName,
       assignmentId: res.insertedId,
       dateUploaded: datainDatabase.dateUploaded,
       submissionDate: datainDatabase.submissionDate,
@@ -71,33 +44,57 @@ export async function POST(request: NextRequest) {
       completedCount: 0,
     });
     console.log(res3);
-    
+
+    /////                  Adding Repo Disabled For Now
+    // const octokit = new Octokit({
+    //   auth: process.env.PERSONAL_ACCESS_TOKEN,
+    // });
+    // console.log("starting to create repo", process.env.PERSONAL_ACCESS_TOKEN);
+    // const sanitizedDescription = reqBody.description.replace(/[\x00-\x1F\x7F]/g, "");
+
+    // const createRepoResponse = await octokit.request("POST /orgs/DITMS/repos", {
+    //   org: "ORG",
+    //   name: reqBody.name,
+    //   description: sanitizedDescription,
+    //   homepage: "https://github.com",
+    //   private: false,
+    //   has_issues: true,
+    //   has_projects: true,
+    //   has_wiki: true,
+    //   headers: {
+    //     "X-GitHub-Api-Version": "2022-11-28",
+    //   },
+    // });
+    // console.log(createRepoResponse, "response created");
+
+    // const repoName = createRepoResponse.data.name; // Get the repository name
+
+    /////                  Adding Readme Disabled For Now
     // Replace these variables with your organization and repository details
-    const orgName = "DITMS";
+    //     const orgName = "DITMS";
 
-    const path = "README.md"; // You can specify a different path if needed
-    const readmeContent = `## ${reqBody.name} ${reqBody.description}
-## Screenshots
-![alt text](${awsS3link})`;
-    console.log("Adding readme");
+    //     const path = "README.md"; // You can specify a different path if needed
+    //     const readmeContent = `## ${reqBody.name} ${reqBody.description}
+    // ## Screenshots
+    // ![alt text](${awsS3link})`;
+    //     console.log("Adding readme");
 
-    // Encode the content as base64
-    const contentBase64 = Buffer.from(readmeContent).toString("base64");
-    // Make a PUT request to create or update the README file
-    const res2 = await octokit.request(
-      "PUT /repos/{owner}/{repo}/contents/{path}",
-      {
-        owner: orgName,
-        repo: repoName,
-        path: path,
-        message: "Create README2",
-        content: contentBase64,
-      }
-    );
-    console.log(res, "ReadMe added");
+    //     // Encode the content as base64
+    //     const contentBase64 = Buffer.from(readmeContent).toString("base64");
+    //     // Make a PUT request to create or update the README file
+    //     const res2 = await octokit.request(
+    //       "PUT /repos/{owner}/{repo}/contents/{path}",
+    //       {
+    //         owner: orgName,
+    //         repo: repoName,
+    //         path: path,
+    //         message: "Create README2",
+    //         content: contentBase64,
+    //       }
+    //     );
+    //     console.log(res, "ReadMe added");
 
-    console.log(res);
-    return NextResponse.json(awsS3link);
+    return NextResponse.json(res);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

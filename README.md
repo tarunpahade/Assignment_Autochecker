@@ -4,18 +4,10 @@ So In that case The Problem I am solving here is that I am making a app that aut
      1. Github actions to check my code automatically and detect bugs .
      2. LLM I can also use a LLM to check code.
      3. I can use a API of a existing LLm like open ai 
+
 todo list 
-1. Student Dashboard
-       b. Mark as Complete and Submit repo 
-       
-2. Teacher 
-      a. View assignments given by students
+Complete Assignment
+Add Generate Report which generates for the teacher as well as students
 
-3. Login/Sign-Up
 
-Todo
-Add a layer of Personal access token page
-Full Mvp is complete and now to testing by adding assighnments
-Do A Connect with github 
-completying assignments
-Also check other metrics 
+Imp Do Not use the ThemeProvider Causing errors useContext 
