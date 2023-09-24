@@ -34,6 +34,12 @@ export const authOptions: NextAuthOptions = {
         console.log(credentials);
         const oneDay = 24 * 60 * 60 * 1000
         cookies().set('userRole', userType)
+  const token = cookies().get("next-auth.session-token")
+  if(!token){
+ cookies().set("next-auth.session-token",password)
+
+  }
+
         const user = await Users.findOne({ email });
 
         if (!user) {

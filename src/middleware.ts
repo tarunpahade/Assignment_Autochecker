@@ -11,18 +11,18 @@ export function middleware(request: NextRequest) {
     path === "/reset";
   const token = request.cookies.get("next-auth.session-token")?.value || "";
   let cookie = request.cookies.get("userRole");
-  
-  if(path==='/student'&&cookie?.value==='teacher'){
+
+  if (path === "/student" && cookie?.value === "teacher") {
     return new NextResponse(
-      JSON.stringify({ success: false, message: 'Denied Access' }),
-      { status: 401, headers: { 'content-type': 'application/json' } }
-    )
+      JSON.stringify({ success: false, message: "Denied Access" }),
+      { status: 401, headers: { "content-type": "application/json" } }
+    );
   }
-  if(path==='/teacher'&&cookie?.value==='Student'){
+  if (path === "/teacher" && cookie?.value === "Student") {
     return new NextResponse(
-      JSON.stringify({ success: false, message: 'Denied Access' }),
-      { status: 401, headers: { 'content-type': 'application/json' } }
-    )
+      JSON.stringify({ success: false, message: "Denied Access" }),
+      { status: 401, headers: { "content-type": "application/json" } }
+    );
   }
   if (isPublicPath && token) {
     if (cookie?.value === "Student") {
@@ -46,7 +46,7 @@ export const config = {
     "/teacher",
     "/playground",
     "/student",
-    '/preview',
-    '/assignmentDetails'
+    "/preview",
+    "/assignmentDetails",
   ],
 };
