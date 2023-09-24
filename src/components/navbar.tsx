@@ -7,31 +7,42 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useTheme } from "next-themes";
 import { Sun, Moon, Search, User } from "react-feather";
 import { signOut, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect,useRouter } from "next/navigation";
+import axios from "axios";
 
 
 
-const userNavigation = [
-    { name: 'Your Profile', href: '/profile', onClick: () => { redirect('/profile') } },
-    { name: 'Settings', href: '#' },
-    {
-        name: 'Sign out', href: '#', onClick: () => {
-            signOut({ redirect: true })
-            redirect('/login')
-        }
-    },
-]
 const Navbar = () => {
     const { theme, setTheme } = useTheme();
     const [currentNavItem, setCurrentNavItem] = useState('Dashboard');
     const { data: session } = useSession()
-
+const router=useRouter()
     const user = {
         name: session?.user.name,
         email: session?.user.email,
         imageUrl: session?.user.image
 
     }
+    const userNavigation = [
+        { name: 'Your Profile', href: '/profile', onClick: () => { redirect('/profile') } },
+        { name: 'Settings', href: '#' },
+        {
+            name: 'Sign out', href: '#', onClick:  async () => {
+                    try {
+                     console.log('Starting to logout');
+                     await axios.get('/api/users/logout')
+                  
+     signOut(); 
+                router.push('/login')
+                        
+                      // Handle the response as needed, e.g., redirect to the login page.
+                    } catch (error) {
+                      console.error('Logout failed:', error);
+                    }
+                  }}
+            
+        
+    ]
     const navigation = [
         { name: 'Dashboard', href: '#', current: currentNavItem === 'Dashboard' },
         // { name: 'Team', href: '#', current: currentNavItem === 'Team' },
@@ -39,6 +50,10 @@ const Navbar = () => {
         // { name: 'Jobs', href: '#', current: currentNavItem === 'Jobs' },
         // { name: 'Reports', href: '#', current: currentNavItem === 'Reports' },
     ];
+    
+    const Logout = () => {
+        
+    };
     const toggleTheme = () => {
         setTheme(theme === "dark" ? "light" : "dark");
     };

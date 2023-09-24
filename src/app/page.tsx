@@ -1,11 +1,13 @@
 'use client'
+import axios from "axios";
 import { useSession, signIn, signOut } from "next-auth/react"
+
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export default function Home() {
   const { status } = useSession()
-
+const router=useRouter()
   const { data: session } = useSession();
   console.log(session);
  if(status === 'unauthenticated'){
@@ -27,7 +29,17 @@ redirect('/login')
             <button
               type="button"
               className="flex w-full justify-center rounded-md mt-6 bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => signOut()}
+             onClick={async () => {
+                try {
+                  await axios.get('/api/users/logout');
+                  signOut(); 
+                router.push('/login')
+     
+                  // Handle the response as needed, e.g., redirect to the login page.
+                } catch (error) {
+                  console.error('Logout failed:', error);
+                }
+              }}
             >
               Logout
             </button>
