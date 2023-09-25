@@ -7,6 +7,17 @@ So In that case The Problem I am solving here is that I am making a app that aut
 
 todo list 
 Complete Assignment
+
+## Complete Playground 
+1. Learn How fine tuning works and also learn about AI agents work.  
+2. Fine Tune Model on code CSS , HTML.
+3. Make Data avaliable offline .
+4. Use Openai api.
+(a.) Add Code Submmision 
+(b.) Add Response From AI.
+
+
+ 
 Add Generate Report which generates for the teacher as well as students
 
 

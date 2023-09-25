@@ -17,6 +17,48 @@
     background: rgb(13, 18, 23);
     color: white;
   }
+  #textrareaDiv {
+    resize: none;
+    padding: 1rem;
+    border: 0;
+    background: rgb(13, 18, 23);
+    color: white;  
+  }
+
+  /* Add these styles to your CSS file */
+.code-editor {
+  position: relative;
+  width: 100%;
+  height: 300px; /* Set your desired height for the textarea */
+  overflow: auto;
+  padding-left: 50px; /* Add space for line numbers (adjust as needed) */
+}
+
+.code-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  resize: vertical; /* Prevent resizing */
+  font-family: monospace; /* Use a monospace font for consistent spacing */
+}
+
+/* Line numbers */
+.code-editor::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px; /* Adjust the width as needed for line numbers */
+  height: 100%;
+  padding: 8px 0;
+  text-align: right;
+  border-right: 1px solid #ccc; /* Vertical line separating line numbers */
+  background-color: #f8f8f8; /* Background color for line numbers */
+  color: #999; /* Text color for line numbers */
+  font-size: 14px;
+  line-height: 1.4;
+}
+
   
   textarea:focus {
     outline: none;
@@ -24,11 +66,11 @@
   }
   
   iframe {
-    width: 100%;
+    width: 99.5%;
+    border-radius: 10px;
     height: 100%;
     padding: 1rem;
     border: 0;
-    background-color: black;
   }
   
   h1 {
@@ -52,5 +94,29 @@
     textarea {
       resize: horizontal;
       min-width: 300px;
+    }
+  }
+
+
+  .typing-animation {
+    animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  
+  @keyframes blink-caret {
+    from,
+    to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: orange;
     }
   }

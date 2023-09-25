@@ -3,14 +3,14 @@ import { assignments } from '@/types/interface';
 import { ExternalLink } from 'react-feather';
 import { useSession } from 'next-auth/react';
 import { redirect,useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 
 
 export const AssignmentsList: React.FC<any> = ({ loading, updateDatabase, viewResult, data, userType }) => {
     
     const { data: session } = useSession()
-    const email = session?.user.email
-const router=useRouter()
+    
 
     return (
         <ul className='myComponent' role="list" >
@@ -30,13 +30,13 @@ const router=useRouter()
                                 </div>
                                     
                                         <div>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    console.log('hii',person._id);
-                                                    
-                                                    router.push(`/assignmentDetails/${person._id}`)
-                                                                                                    }}
+                                            <Link
+                                             href={{ 
+                                                pathname: `/assignmentDetails/${person._id}`, 
+                                                query: {
+                                                    data:JSON.stringify(person)
+                                                } 
+                                                }}                                                  
                                                 className={`mr-5 lg:text-[12px] text-[12px] text-white bg-black px-3 py-2 rounded-md mt-2 ml-4 `}
                                                 style={{
                                                     backgroundColor: 'black',
@@ -45,7 +45,7 @@ const router=useRouter()
                                                 }}
                                             >
                                                 View Details
-                                            </button>
+                                            </Link>
                                         </div>
 
                                 </>
