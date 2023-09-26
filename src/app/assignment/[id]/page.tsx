@@ -6,6 +6,8 @@ import Image from 'next/image'
 import { assignments as MyAssignments } from '@/types/interface';
 import GPTresponse from '@/components/aiResponse';
 import { text } from 'stream/consumers';
+import Link from 'next/link';
+import Loading from '@/components/miniComponents/mini';
 
 
 
@@ -48,7 +50,13 @@ const Page = ({ params }: any) => {
                     setstudents([response.data.studentsWhoHaveCompleted])
 
                 }
-                setstudents(response.data.studentsWhoHaveCompleted)
+               const dataAddedMarkedAs= response.data.studentsWhoHaveCompleted.map((student: any) => ({
+                    ...student,
+                    markedAs: "complete" ,
+                    name:assignments.name,
+                    description:assignments.description
+                  }));
+                setstudents(dataAddedMarkedAs)
                 setLoading(false);
             } catch (error: any) {
                 console.log(error.message);
@@ -62,70 +70,59 @@ const Page = ({ params }: any) => {
     }, [_id]); // The empty array as the second argument ensures the effect runs only once after the initial render
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Loading />;
     }
 
     if (error) {
         return <p>Some Error While Featching Assignments</p>;
     }
 
-    const viewResult = (result2: string) => {
-        setResponse(result2!)
-        setGpt(true)
-
+    
+    const goBack = () => {
+        setGpt(false)
     }
-const goBack =()=>{
-    setGpt(false)
-}
     return (
-        <div>
-            {gpt ? <GPTresponse data={response} goBack={goBack} /> : (
+        <div className='px-4  py-6 sm:px-8 lg:px-20  items-center pl-16'>
                 <ul role="list" className="w-full  divide-gray-100">
 
                     <li key={Math.random()}>
-                        <a href="#" className="block hover:bg-gray-50">
+                        <div className=" flex">
                             <div className="px-4 py-4 sm:px-6">
-                                <div className="flex items-center justify-between">
-                                    <a href={assignments.repoLink} className="truncate text-sm font-medium text-indigo-600">{assignments.name}</a>
+                                <h1 className="text-3xl pl-5 font-bold tracking-tight  text-gray-900">{assignments.name}</h1>
+
+                                <div className="px-4 py-4 sm:px-6 mt-2 ">
+                                    <p className='w-[90%]'>{assignments.description}</p>
+                                    <div className="mr-6 flex items-center text-sm text-gray-500">
 
 
-                                </div>
-                                <div className="mt-2 flex justify-between">
-                                    <div className="sm:flex">
-                                        <div className="mr-6 flex items-center text-sm text-gray-500">
 
-                                            Day Uploaded   {assignments.dueDate}
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center text-sm text-gray-500">
 
                                         Submission Date {assignments.dateUploaded}
+
                                     </div>
+
                                 </div>
+
+
                             </div>
-                        </a>
+
+                            {assignments.image ? (
+                                <Image alt='Assignment Image' className='w-[30%]  mx-[10%]' src={assignments.image} width={300} height={300} />
+
+                            ) : null
+
+                            }
+
+
+                        </div>
                     </li >
 
 
-                    <div className="px-4 py-4 sm:px-6 mt-2 ">
-                        <p>{assignments.description}</p> <a className='text-blue-500 underline' href={assignments.repoLink}> Click Here  to visit submitted  Repository</a>
 
-                    </div>
-                    <div className='mx-auto max-w-6xl py-6 sm:px-6 lg:px-8 h-[30%] overflow-auto'>
-                        
-                        {assignments.image ? (
-                        <Image alt='Assignment Image' className='w-[30%]  mx-[10%]' src={assignments.image} width={300} height={300} />
-
-                        ) : null
-
-                        }
-
-
-                    </div>
                     {
                         students ? (
-                            <>
-                                <h1 className='mt-8 pl-3 text-black-900 text-2xl'>Subbmitted By</h1>
+                            <div className='px-4 py-4 sm:px-6'>
+                                <h1 className='mt-8 pl-3 text-black-900 font-bold text-xl  '>Subbmitted By</h1>
                                 {students.map((students: any) => (
 
 
@@ -147,13 +144,12 @@ const goBack =()=>{
                                                     </div>
                                                     <div className="flex items-center text-sm text-gray-500">
 
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                console.log('View Result');
-                                                                // Handle the "View Result" action here.
-                                                                viewResult('Featch result for Email ' + students.email + ' for assignment  ' + students.email + students.result)
-                                                            }}
+                                                        <Link   href={{
+                                                            pathname: `/playground`,
+                                                            query: {
+                                                                data: JSON.stringify(students)
+                                                            }
+                                                        }}
                                                             className={`mr-5 lg:text-[12px] text-[12px] text-white bg-black px-3 py-2 rounded-md mt-2 ml-4 `}
                                                             style={{
                                                                 backgroundColor: 'black',
@@ -162,7 +158,7 @@ const goBack =()=>{
                                                             }}
                                                         >
                                                             View Result
-                                                        </button>
+                                                        </Link>
 
                                                     </div>
                                                 </div>
@@ -173,16 +169,14 @@ const goBack =()=>{
                                 ))
 
                                 }
-                            </>
+                            </div>
 
                         ) : <text>No One Submitted Assignment Yet</text>
 
                     }
                 </ul>
 
-            )
-
-            }
+            
         </div>
 
     )

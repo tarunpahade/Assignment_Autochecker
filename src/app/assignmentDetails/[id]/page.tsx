@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Image from 'next/image'
 import GPTresponse from '@/components/aiResponse';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { ObjectId } from 'mongodb';
 import Link from 'next/link';
+import Loading from '@/components/miniComponents/mini';
 
 interface AssignmentData {
     _id: string;
@@ -57,7 +58,6 @@ const Page = ({ params }: any) => {
             reader.readAsText(selectedFile);
         }
     };
-    console.log(params);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -85,7 +85,7 @@ const Page = ({ params }: any) => {
     }, [_id]); // The empty array as the second argument ensures the effect runs only once after the initial render
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Loading />;
     }
 
     if (error) {

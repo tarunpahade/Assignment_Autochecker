@@ -6,6 +6,7 @@ import { assignments } from '@/types/interface';
 import { AssignmentsList } from '@/components/teacher/assignments';
 import { useRouter } from 'next/navigation';
 import GPTresponse from '@/components/aiResponse';
+import Loading from '@/components/miniComponents/mini';
 
 const Student = () => {
     const router = useRouter();
@@ -74,7 +75,7 @@ const Student = () => {
 
     if (loading2) {
 
-        return <p>Loading...</p>;
+        return <Loading />;
     }
     if (dataNull) {
 

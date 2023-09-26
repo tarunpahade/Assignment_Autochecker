@@ -35,6 +35,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
             (feedback: any) => feedback.email === email
           );
           filteredAssignment.markedAs = "complete";
+          filteredAssignment.submittedCode= filtered.find((feedback: any) => feedback.email === email)?.submittedCode
           const result = filtered.find((feedback: any) => feedback.email === email)?.result
           filteredAssignment.result=result
         } else {

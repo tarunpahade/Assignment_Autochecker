@@ -29,6 +29,7 @@ export interface assignments {
     markedAs?:string,
     result?:string,
     uploadType?:string,
+    submittedCode?:string
 }
 
 export interface completeAssignments{
@@ -38,17 +39,7 @@ export interface completeAssignments{
     submissionDate: string,
     uploadedBy:string,
     repoLink:string,
-    completedCount:Number
+    completedCount:Number,
+    completedBy?:any
 }
 
-export interface People {
-    name: string;
-    role: string;
-    email: string;
-    imageUrl: string;
-    lastSeen?: string; // Make it optional
-    lastSeenDateTime?: string;
-    id?: number;
-    assignmentStatus:boolean
-
-}   

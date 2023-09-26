@@ -37,6 +37,8 @@ export async function POST(request: NextRequest) {
 
     const res3 = await CompleteAssignment.insertOne({
       assignmentId: res.insertedId,
+      assignmentName: reqBody.name,
+      
       dateUploaded: datainDatabase.dateUploaded,
       submissionDate: datainDatabase.submissionDate,
       uploadedBy: datainDatabase.uploadedBy,

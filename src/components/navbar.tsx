@@ -71,17 +71,8 @@ const router=useRouter()
                     <>
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="flex h-16 items-center justify-between">
-                                <div className="flex items-center">
-                                    <div className="flex-shrink-0">
-                                        {/* <Image
-                height={8}
-                width={8}
-                  className="h-8 w-8"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-
-                  alt="Your Company"
-                /> */}
-                                    </div>
+                                <div className="flex items-start">
+                                    
                                     <div className="hidden md:block">
                                         <div className="ml-10 flex items-baseline space-x-4">
                                             {navigation.map((item) => (
@@ -241,8 +232,8 @@ const router=useRouter()
                 )}
             </Disclosure>
             <header className={`bg-${theme === 'dark' ? 'slate-900' : 'white'} shadow`}>
-                <div className="mx-auto max-w-7xl px-4 pl-10 py-6 sm:px-6 lg:px-8">
-                    <h1 className={`text-3xl font-bold tracking-tight pl-8 text-${theme === 'dark' ? 'white' : 'gray-900'}`}>
+                <div className="mx-auto max-w-7xl px-4 pl-5 py-6 sm:px-6 lg:px-8">
+                    <h1 className={`text-3xl font-bold tracking-tight pl-5 text-${theme === 'dark' ? 'white' : 'gray-900'}`}>
                         {/* {currentNavItem ? currentNavItem.name : 'Default Header'} */}
                         {/* {navigation.find((item) => item.current)?.name || 'Header'} */}
                         {currentNavItem}
