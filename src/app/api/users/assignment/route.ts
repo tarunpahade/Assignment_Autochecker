@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
     }
     const datainDatabase: assignmentsDatabase = {
       ...reqBody,
-      repoLink: "Disabled Github Integration For Now",
     };
     console.log(datainDatabase);
     console.log("Starting to insert in DB");
