@@ -1,13 +1,12 @@
 
 
 'use client'
-import { People } from "@/types/interface";
 import Image from "next/image";
 
  
 
 interface ListProps {
-    data: People[];
+    data: any;
     onPress: any;
 
 }
@@ -15,7 +14,7 @@ export const StudentList: React.FC<ListProps> = ({ data, onPress }) => {
     return (
         <ul role="list" className="w-full  divide-gray-100">
 
-            {data.map((person: People) => (
+            {data.map((person: any) => (
            <li key={Math.random()}>
            <a href="#" className="block hover:bg-gray-50">
              <div className="px-4 py-4 sm:px-6">

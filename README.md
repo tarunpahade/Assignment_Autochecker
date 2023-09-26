@@ -16,6 +16,7 @@ Complete Assignment
 (a.) Add Code Submmision 
 (b.) Add Response From AI.
 
+Add cookie restriction maybe later in /assignments/:id
 
  
 Add Generate Report which generates for the teacher as well as students

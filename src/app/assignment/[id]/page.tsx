@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import axios from 'axios';
 import Image from 'next/image'
 import { assignments as MyAssignments } from '@/types/interface';
@@ -14,6 +14,7 @@ import Loading from '@/components/miniComponents/mini';
 const Page = ({ params }: any) => {
     const router = useRouter();
     const _id = params.id
+    
 
     const [assignments, setAssignments] = useState(
         {
@@ -67,7 +68,7 @@ const Page = ({ params }: any) => {
         };
 
         fetchData();
-    }, [_id]); // The empty array as the second argument ensures the effect runs only once after the initial render
+    }, [_id, assignments.description, assignments.name]); // The empty array as the second argument ensures the effect runs only once after the initial render
 
     if (loading) {
         return <Loading />;

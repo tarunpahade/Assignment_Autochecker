@@ -24,6 +24,13 @@ export function middleware(request: NextRequest) {
       { status: 401, headers: { "content-type": "application/json" } }
     );
   }
+  
+  if (path === "/assignment/:path*" && cookie?.value === "Student") {
+    return new NextResponse(
+      JSON.stringify({ success: false, message: "Denied Access" }),
+      { status: 401, headers: { "content-type": "application/json" } }
+    );
+  }
   if (isPublicPath && token) {
     if (cookie?.value === "Student") {
       return NextResponse.redirect(new URL("/student", request.nextUrl));
@@ -43,6 +50,7 @@ export const config = {
     "/signup",
     "/reset",
     "/assignment",
+    "/assignment/:path*",
     "/teacher",
     "/playground",
     "/student",
