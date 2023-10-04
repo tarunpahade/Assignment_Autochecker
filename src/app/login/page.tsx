@@ -74,7 +74,7 @@ export default function Login() {
 
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium leading-6">
-                                  Nmae
+                                  Name
                                 </label>
 
                                 <div className="mt-2">
@@ -82,7 +82,7 @@ export default function Login() {
                                         id="name"
                                         name="name"
                                         type="text"
-                                        placeholder="Lastname Name Middlename all capitalized"
+                                        placeholder="Lastname Name Midname all capitalized"
                                         required
                                         onChange={(e) => setUser({ ...user, name: e.target.value })}
                                         className="block p-2 w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
