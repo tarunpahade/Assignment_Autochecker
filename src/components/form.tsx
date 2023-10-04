@@ -12,7 +12,7 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
 
     const { data: session } = useSession()
 
-    const [email, setemail] = useState('')
+    const [nameOfAssignment, setnameOfAssignment] = useState('')
     const [description, setdescription] = useState('')
     const [dueDate, setDueDate] = useState('')
     const [selectedImage, setSelectedImage] = useState(null);
@@ -55,11 +55,11 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
             console.log(session?.user.email!);
 
             const data: assignments = {
-                name: email,
+                name: nameOfAssignment,
                 description,
                 dateUploaded: formattedDate,
                 submissionDate: dueDate,
-                uploadedBy: session?.user.email!,
+                uploadedBy: session?.user.name!,
                 forYear: selectedOption!,
                 uploadType: selectedOption3!,
             }
@@ -76,7 +76,7 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
             console.log(res);
             setLoading(false)
             setSucessfullySentMail(true)
-
+            closeForm()
         } catch (error: any) {
             console.log('Error while Adding Assignments', error);
             setError(true)
@@ -94,11 +94,7 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
             reader.readAsDataURL(file);
         }
     };
-    const options = [
-        { name: '.html' },
-        // { name: '.css' },
-        // { name: '.js' },
-    ];
+
     const options2 = [
         { name: 'Single Document', disabled: false },
         { name: 'Two files Html and CSS ', disabled: false },
@@ -110,7 +106,7 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
                 <div className="border-b border-gray-900/10 pb-12">
 
                     <XCircle className='absolute right-8 top-10' onClick={closeForm} />
-                    <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                         {loading ? (
                             <label className="block text-sm font-medium leading-6 text-gray-900">Loading</label>
 
@@ -123,7 +119,7 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
                             <div className="mt-2">
                                 <div className="flex rounded-md shadow-sm   sm:max-w-md">
 
-                                    <input required value={email} onChange={(e) => setemail(e.target.value)} type="text" name="email" id="email" className="block flex-1 bg-transparent py-1.5 pl-1 text-gray-900  focus:ring-0 sm:text-sm sm:leading-6" placeholder="Create a Html Form" />
+                                    <input required value={nameOfAssignment} onChange={(e) => setnameOfAssignment(e.target.value)} type="text" name="email" id="email" className="block flex-1 bg-transparent py-1.5 pl-1 text-gray-900  focus:ring-0 sm:text-sm sm:leading-6" placeholder="Create a Html Form" />
                                 </div>
                             </div>
                         </div>
@@ -160,7 +156,7 @@ export const Form = ({ closeForm, getFormDetailsAndAppendData }: any) => {
                         </div>
                         <div className="col-span-full">
 
-                            <RadioOptions  options={options2} handleRadioChange={handleRadioChange2} selectedOption={selectedOption3} Title={'Select Upload type'} />
+                            <RadioOptions options={options2} handleRadioChange={handleRadioChange2} selectedOption={selectedOption3} Title={'Select Upload type'} />
 
                         </div>
                         <div className="col-span-full flex justify-between">

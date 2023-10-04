@@ -1,13 +1,13 @@
 'use client'
 import Image from "next/image";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Fragment } from 'react'
 import { Disclosure, Menu } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useTheme } from "next-themes";
 import { Sun, Moon, Search, User } from "react-feather";
 import { signOut, useSession } from "next-auth/react";
-import { redirect,useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
 
@@ -16,7 +16,19 @@ const Navbar = () => {
     const { theme, setTheme } = useTheme();
     const [currentNavItem, setCurrentNavItem] = useState('Dashboard');
     const { data: session } = useSession()
-const router=useRouter()
+    const [showHeader, setshowHeader] = useState(false)
+    const router = useRouter()
+    const pathname = usePathname()
+    
+    
+    useEffect(() => {
+        // Check the pathname and set showHeader accordingly
+        if (pathname === '/student'  ||  pathname === '/teacher' || pathname === '/assignment/:path*' || pathname === '/assignmentDetails/:path') {
+          setshowHeader(true);
+        } else {
+          setshowHeader(false);
+        }
+      }, [pathname]);
     const user = {
         name: session?.user.name,
         email: session?.user.email,
@@ -24,24 +36,25 @@ const router=useRouter()
 
     }
     const userNavigation = [
-        { name: 'Your Profile', href: '/profile', onClick: () => { redirect('/profile') } },
+        { name: 'Your Profile', href: '/profile', onClick: () => { redirect('/') } },
         { name: 'Settings', href: '#' },
         {
-            name: 'Sign out', href: '#', onClick:  async () => {
-                    try {
-                     console.log('Starting to logout');
-                     await axios.get('/api/users/logout')
-                  
-     signOut(); 
-                router.push('/login')
-                        
-                      // Handle the response as needed, e.g., redirect to the login page.
-                    } catch (error) {
-                      console.error('Logout failed:', error);
-                    }
-                  }}
-            
-        
+            name: 'Sign out', href: '#', onClick: async () => {
+                try {
+                
+                    await axios.get('/api/users/logout')
+
+                    signOut();
+                    router.push('/login')
+
+                    // Handle the response as needed, e.g., redirect to the login page.
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                }
+            }
+        }
+
+
     ]
     const navigation = [
         { name: 'Dashboard', href: '#', current: currentNavItem === 'Dashboard' },
@@ -50,32 +63,38 @@ const router=useRouter()
         // { name: 'Jobs', href: '#', current: currentNavItem === 'Jobs' },
         // { name: 'Reports', href: '#', current: currentNavItem === 'Reports' },
     ];
-    
+
     const Logout = () => {
-        
+
     };
     const toggleTheme = () => {
         setTheme(theme === "dark" ? "light" : "dark");
     };
     const handleNavigationClick = (itemName: string) => {
-        console.log(itemName);
 
         setCurrentNavItem(itemName);
     };
+    let newPathname = pathname.slice(1).substring(0, pathname.lastIndexOf('/'));
+if(pathname==='/ai'){
 
-    return (
+newPathname='/ai'
+}
+if(pathname === '/table'){
+    newPathname='/table'
+}    
+return (
         <>
-            <Disclosure as="nav" className={`${theme === 'dark' ? 'dark:bg-slate-900' : 'bg-white'
+            <Disclosure as="nav" className={`${theme === 'dark' ? 'dark:bg-slate-900' : 'bg-white border-b-[0.5px] border-gray-300'
                 }`}>
                 {({ open }) => (
                     <>
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="flex h-16 items-center justify-between">
                                 <div className="flex items-start">
-                                    
+
                                     <div className="hidden md:block">
                                         <div className="ml-10 flex items-baseline space-x-4">
-                                            {navigation.map((item) => (
+                                            {/* {navigation.map((item) => (
                                                 <button
                                                     onClick={(e) => {
                                                         e.preventDefault()
@@ -93,7 +112,17 @@ const router=useRouter()
                                                 >
                                                     {item.name}
                                                 </button>
-                                            ))}
+                                            ))} */}
+                                               <Disclosure.Button
+                                        as="a"
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                        }}
+                                        className={'bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium'}
+                                    >
+                                           {showHeader ? 'Dasboard' : newPathname}
+                                    </Disclosure.Button>
+                               
                                         </div>
                                     </div>
                                 </div>
@@ -115,19 +144,19 @@ const router=useRouter()
                                                 <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                                     <span className="absolute -inset-1.5" />
                                                     <span className="sr-only">Open user menu</span>
-                                                  {user.imageUrl ? (
-                                                    <Image
-                                                        height={8}
-                                                        width={8} className="h-8 w-8 rounded-full" src={user.imageUrl!} alt="" />
-                                                  ) :(
-                                                  <User height={28} width={28} color="#fff" />
+                                                    {user.imageUrl ? (
+                                                        <Image
+                                                            height={8}
+                                                            width={8} className="h-8 w-8 rounded-full" src={user.imageUrl!} alt="" />
+                                                    ) : (
+                                                        <User height={28} width={28} color="#fff" />
 
-                                                  )
+                                                    )
 
-                                                  }
-                                                  
-                                                  
-                                                    
+                                                    }
+
+
+
                                                 </Menu.Button>
                                             </div>
 
@@ -166,28 +195,29 @@ const router=useRouter()
                             </div>
                         </div>
 
-                        <Disclosure.Panel className="md:hidden">
+                        <Disclosure.Panel className="md:hidden border-b-2 border-black">
                             <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
 
 
-                                {navigation.map((item) => (
+                                {/* {navigation.map((item) => ( */}
                                     <Disclosure.Button
-                                        key={item.name}
+                                        // key={item.name}
                                         as="a"
-                                        href={item.href}
+                                        // href={item.href}
                                         onClick={(e) => {
                                             e.preventDefault()
-                                            handleNavigationClick(item.name)
+                                            // handleNavigationClick(item.name)
                                         }}
-                                        className={`${item.current
-                                            ? 'bg-gray-900 text-white'
-                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                                            } block rounded-md px-3 py-2 text-base font-medium`}
-                                        aria-current={item.current ? 'page' : undefined}
+                                        className={'bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium'}
+                                            // `${item.current?
+                                             
+                                            // : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                            // block rounded-md px-3 py-2 text-base font-medium`}
+                                        
                                     >
-                                        {item.name}
+                                           {showHeader ? 'Dasboard' : newPathname}
                                     </Disclosure.Button>
-                                ))}
+                                {/* ))} */}
                             </div>
                             <div className="border-t border-gray-700 pb-3 pt-4">
                                 <div className="flex items-center px-5">
@@ -231,16 +261,21 @@ const router=useRouter()
                     </>
                 )}
             </Disclosure>
-            <header className={`bg-${theme === 'dark' ? 'slate-900' : 'white'} shadow`}>
-                <div className="mx-auto max-w-7xl px-4 pl-5 py-6 sm:px-6 lg:px-8">
-                    <h1 className={`text-3xl font-bold tracking-tight pl-5 text-${theme === 'dark' ? 'white' : 'gray-900'}`}>
-                        {/* {currentNavItem ? currentNavItem.name : 'Default Header'} */}
-                        {/* {navigation.find((item) => item.current)?.name || 'Header'} */}
-                        {currentNavItem}
-                    </h1>
-                </div>
-            </header>
-        </>
+            {showHeader ? (
+ <header className={`bg-${theme === 'dark' ? 'slate-900' : 'white'} shadow`}>
+ <div className="mx-auto max-w-7xl px-4 pl-5 py-6 sm:px-6 lg:px-8">
+     <h1 className={`text-3xl font-bold tracking-tight pl-5 text-${theme === 'dark' ? 'white' : 'gray-900'}`}>
+         {/* {currentNavItem ? currentNavItem.name : 'Default Header'} */}
+         {/* {navigation.find((item) => item.current)?.name || 'Header'} */}
+         {currentNavItem}
+     </h1>
+ </div>
+</header>
+
+            ) : null
+
+            }
+           </>
     )
 }
 export default Navbar

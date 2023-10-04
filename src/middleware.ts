@@ -11,8 +11,14 @@ export function middleware(request: NextRequest) {
     path === "/reset";
   const token = request.cookies.get("next-auth.session-token")?.value || "";
   let cookie = request.cookies.get("userRole");
+  if (path === "/signup") {
+    return new NextResponse(
+      JSON.stringify({ success: false, message: "Denied Access" }),
+      { status: 401, headers: { "content-type": "application/json" } }
+    );
+  }
 
-  if (path === "/student" && cookie?.value === "teacher") {
+  if (path === "/student" && cookie?.value === "Teacher") {
     return new NextResponse(
       JSON.stringify({ success: false, message: "Denied Access" }),
       { status: 401, headers: { "content-type": "application/json" } }
@@ -34,7 +40,7 @@ export function middleware(request: NextRequest) {
   if (isPublicPath && token) {
     if (cookie?.value === "Student") {
       return NextResponse.redirect(new URL("/student", request.nextUrl));
-    } else if (cookie?.value === "teacher") {
+    } else if (cookie?.value === "Teacher") {
       return NextResponse.redirect(new URL("/teacher", request.nextUrl));
     }
   }
@@ -56,5 +62,7 @@ export const config = {
     "/student",
     "/preview",
     "/assignmentDetails",
+    "/table",
+    "/ai"
   ],
 };

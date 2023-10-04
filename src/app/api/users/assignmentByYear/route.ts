@@ -6,8 +6,10 @@ export async function POST(request: NextRequest, res: NextResponse) {
     const { email } = await request.json();
     console.log("Hii", email);
 
-    const user = await Users.findOne({ email: email });
-
+    const user = await Users.findOne({ name: email });
+  
+  console.log('updated all users');
+  
     console.log(user, "this is user");
 
     const res = await Assignments.find({}).toArray();

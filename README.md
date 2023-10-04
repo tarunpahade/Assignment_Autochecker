@@ -17,9 +17,12 @@ Complete Assignment
 (b.) Add Response From AI.
 
 Add cookie restriction maybe later in /assignments/:id
-
+Complete upload file type in /student allow js upload.
  
 Add Generate Report which generates for the teacher as well as students
 
 
 Imp Do Not use the ThemeProvider Causing errors useContext 
+Password of classteacher is 54321
+Password of student is 12345
+Teacher Username Ms. Pallavi S.Dakhore

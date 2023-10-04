@@ -5,23 +5,21 @@ import axios from 'axios';
 import { assignments } from '@/types/interface';
 import { AssignmentsList } from '@/components/teacher/assignments';
 import { useRouter } from 'next/navigation';
-import GPTresponse from '@/components/aiResponse';
 import Loading from '@/components/miniComponents/mini';
-
+import Users from '@/dbconfig/dbconfig';
 const Student = () => {
     const router = useRouter();
     const { data: session } = useSession()
     const [repo, setRepoData]: any[] = useState([]);
-    const email = session?.user.email
+    const email = session?.user.name
     const [loading2, setLoading2] = useState(true);
     const [error, setError] = useState(false);
+console.log(email,'this is email');
 
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
     const [dataNull, setdataNull] = useState(false)
 
-    const [gpt, setGpt] = useState(false);
-    const [response, setResponse] = useState('');
 
 
     const [selectedOption, setSelectedOption] = useState('all');
@@ -38,7 +36,7 @@ const Student = () => {
         filteredAssignments = repo;
     }
 
-
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -136,19 +134,11 @@ const Student = () => {
             console.error('Error fetching result:', error);
         }
     };
-    const viewResult = (result2: string) => {
-        setResponse(result2!)
-        setGpt(true)
-    }
     
-const goBack =()=>{
-    setGpt(false)
-}
     return (
 
         <main>
 
-            {gpt ? <GPTresponse data={response} goBack={goBack} /> : (
 
                 <div className="mx-auto max-w-6xl py-6 sm:px-6 lg:px-8">
 
@@ -174,12 +164,11 @@ const goBack =()=>{
 
                     <ul role="list" className="divide-y mt-10 divide-gray-100">
 
-                        <AssignmentsList updateDatabase={updateDatabase} viewResult={viewResult} loading={loading} result={result} handleButtonClick={handleButtonClick} userType='Student' data={filteredAssignments} />
+                        <AssignmentsList updateDatabase={updateDatabase}  loading={loading} result={result} handleButtonClick={handleButtonClick} userType='Student' data={filteredAssignments} />
                     </ul>
 
                 </div>
-            )
-            }
+            
         </main>
 
     )

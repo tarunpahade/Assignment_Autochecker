@@ -7,7 +7,6 @@ const client = new MongoClient(uri!, {
  const db = client.db("test");
   const Users = db.collection("users");
  export  const Messages = db.collection("messages");
- export  const Conversation = db.collection("conversation");
  export  const Assignments = db.collection("assignments");
 export const CompleteAssignment=db.collection("completed_assignments");
  

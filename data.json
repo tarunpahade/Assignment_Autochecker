@@ -1,0 +1,440 @@
+[
+    {
+        "name": "ATKARE PRASHANT RAJENDRA",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "ADHAV KULDIP JALINDAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "ANKUSH VEDANT ABHAY",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "BAJAD KRUSHNA VINOD",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "BANDE ATHARV VIJAYKUMAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "BARDE VISHAL LAXMAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "BARGE SHUBHAM MUNJAJI",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "BOBADE AKANSHA VASANT",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "BORSE DHANASHRI DNYANESHWAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "CHANGHATE KRUSHNA RAKHAMAJI",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "CHAVHAN PRACHI PURUSHOTTAM",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "CHINCHOLI SAGAR GURUSHANTAPPA",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "DAMALE SOMNATH SUNIL",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "DATAR NANDINI SATISH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "DEVKATE DIVYA RAJU",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "DIPAKE SUYASH SUDHAKAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GAIKWAD KARTIK SANJAY",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GAVHANE ABHISHEK SHRIKANT",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GAVHANE YOGESH EKNATH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GHADGE DEEPAK KAILAS",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GHANDAGE AISHWARYA BAPURAO",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GHUME RAJESH DATTATRAY",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "GUPTA SUJAL SHRIKANT",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "INGLE SHRIKANT GANESH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JADHAV AKASH BABASAHEB",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JADHAV DISHA ASHOK",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JADHAV SHIVPRASAD DATTU",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JAISWAL DIYA SOMESH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JAVARE SANKET SHIVAJI",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JAWALE ANJALI PUNJAJI",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JUNGHARE SANIKA SANJAY",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "JUNGHARE MANISHA GAJANAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KALAMB ASHISH VINOD",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KALE AJINKYA ARJUN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KALE NAMRATA DILIP",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KAMBLE AKSHAYA DNYANESHWAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KATKAR PRANJAL NARAYAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KHULE SHREYASI SHRIYAS",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KHARE SAYALI RAJU",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "KOKATE SONAL SHRIPATI",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "LAHANE RUPESH BHARAT",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MARGUDE AARTI BALASAHEB",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MATE KARTIK DIPAKRAO",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MHASKE NILESH DNYANESHWAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MOGAL NEHA RADHAKISAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MORE AKANKSHA JANARDHAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MUDHOLKAR SHRUSHTI DNYANESHWAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "MURHEKAR MAITREY CHANDRASHEKHAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "NARWADE AAKANKSHA PRABHAKAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "NIKAM VAISHALI KRISHNA",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "PADALKAR MAYURESH RAMESH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "PAHADE TARUN NITIN",
+        "institute": "DITMS",
+        "userType": "Admin"
+    },
+    {
+        "name": "PANKHADE SHRAVNI SAMBHAJIRAO",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "PARDESHI AISHWARYA RAJU",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "PUJARI GAYATRI ANIL",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "RAJPUT ANIKETSING GYANSING",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "RODE DHANSHRI KIRAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SALUNKE ROHIT BAPU",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SARDAR VISHVABHUSHAN DIPAKKUMAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SATPUTE ABHIJEET SACHIN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SHELKE RAMESHWAR KALYAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SHINDE AARTI DINESH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SHINDE NARHARI GANESH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SHRIMANGLE ONKAR GANGADHAR",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SURASE PAYAL RAJENDRA",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "SURASHE APARNA VILAS",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "TAMBARE VAIBHAV KALYAN",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "TAMBE VARSHA KAILAS",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "TETWAR MINAL GHANSHAM",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "UGHADE SHREYA YOGESH",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "WAGHMARE MONIKA ANAND",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    {
+        "name": "WARKHADE ROHINI BAPPASAHEB",
+        "institute": "DITMS",
+        "userType": "Student",
+        "password": 12345
+    },
+    
+    {
+        "name": "Pallavi S.Dakhore",
+        "institute": "DITMS",
+        "userType": "Teacher",
+        "password": 54321
+    }
+]

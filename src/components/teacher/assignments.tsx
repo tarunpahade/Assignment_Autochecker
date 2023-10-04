@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 
 
-export const AssignmentsList: React.FC<any> = ({ loading, updateDatabase, viewResult, data, userType }) => {
+export const AssignmentsList: React.FC<any> = ({ loading, updateDatabase, data, userType }) => {
     
     const { data: session } = useSession()
     

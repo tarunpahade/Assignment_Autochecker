@@ -15,7 +15,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
     console.log("Hello Boys");
 
     const req = await request.json();
-    const {  currecntAssignment, email, submittedCode} = req;
+    const {  currecntAssignment, name, submittedCode} = req;
     console.log(req, currecntAssignment._id);
 
     const res = await CompleteAssignment.findOne({
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
     console.log(res);
     
     // const res2 = await Users.findOne({
-    //   email:email,
+    //   name:name,
     // });
 
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
 
     const newCount = res!.completedCount++;
     const userCount = {
-      email,
+      name,
       date:formattedDate,
       result:result.text,
       submittedCode,

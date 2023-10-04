@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
@@ -14,58 +14,52 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Sign In",
       credentials: {
-        email: {
-          label: "Email",
-          type: "email",
-          placeholder: "abc@example.com",
+        name: {
+          label: "Name",
+          type: "text",
+          placeholder: "PAHADE TARUN NITIN",
         },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any) {
-        if (!credentials || !credentials.email || !credentials.password) {
+        if (!credentials || !credentials.name || !credentials.password) {
           return null;
         }
 
-        const email = credentials?.email as string;
+        const name = credentials?.name as string;
         const password = credentials?.password as string;
-        const userType = credentials?.userType as string;
+let userType;
 
-        console.log(email, password);
+        console.log(name, password);
         console.log(credentials);
-        const oneDay = 24 * 60 * 60 * 1000
-        cookies().set('userRole', userType)
-  const token = cookies().get("next-auth.session-token")
-  if(!token){
- cookies().set("next-auth.session-token",password)
+        if (password === "12345") {
+          cookies().set("userRole", "Student");
+          userType='Student'
+        } else if (password === "54321") {
+          cookies().set("userRole", "Teacher");
+          userType='Teacher'
+        }
 
-  }
+        const token = cookies().get("next-auth.session-token");
+        if (!token) {
+          cookies().set("next-auth.session-token", password);
+        }
 
-        const user = await Users.findOne({ email });
+        const user = await Users.findOne({ name });
 
         if (!user) {
           console.log("user Not Found");
 
           return null;
         }
-        if (user.userType.toUpperCase() !== userType.toUpperCase()) {
-          console.log(userType, user.userType);
-
-          console.log("UserType Specified Not Correct ");
-
-          return null;
-        }
-
-        const vaildPassword = await bcryptjs.compare(password, user.password);
-        console.log(vaildPassword);
-
-        if (vaildPassword) {
-          console.log("Hurray Valid Pass");
-
-          return user;
-        }
+        const session = {
+          userType:cookies().get("userRole"),
+          name: user.name,
+        };
+      
         return {
-          user,
-        } as any;
+          ...session,
+        } as any
       },
     }),
     GoogleProvider({

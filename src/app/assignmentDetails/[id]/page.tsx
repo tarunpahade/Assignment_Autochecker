@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import Image from 'next/image'
-import GPTresponse from '@/components/aiResponse';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { ObjectId } from 'mongodb';
 import Link from 'next/link';
@@ -36,6 +35,8 @@ const Page = ({ params }: any) => {
         dateUploaded: '',
         image: ''
     })
+    console.log(userData);
+    
 
     const [fileContent, setFileContent] = useState('');
 
@@ -68,7 +69,7 @@ const Page = ({ params }: any) => {
 
 
                 setAssignments(response.data.assignment);
-                console.log(response.data.assignment);
+                console.log(response.data);
 
                 //   console.log(response.data.count, response);
 
@@ -130,7 +131,7 @@ const Page = ({ params }: any) => {
 
                             <div className="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Feedback</h5>
-                                <p className="font-normal text-gray-700 dark:text-gray-400">{userData.result}.</p>
+                                <p className="font-normal text-gray-700 dark:text-gray-400">{userData.result}</p>
                                 <Link href={{
                                 pathname: `/playground`,
                                 query: {

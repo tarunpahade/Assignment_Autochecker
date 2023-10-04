@@ -17,11 +17,11 @@ export async function POST(request: NextRequest, res: NextResponse) {
     });
 
     console.log(rres2!.completedCount, rres2!.completedBy);
-
+const completedBy=rres2!.completedBy || null
     return NextResponse.json({
       assignment: res,
       count: rres2!.completedCount,
-      studentsWhoHaveCompleted: rres2!.completedBy,
+      studentsWhoHaveCompleted: completedBy ,
     });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
