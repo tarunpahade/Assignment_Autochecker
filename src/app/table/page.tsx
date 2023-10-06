@@ -1,24 +1,151 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import axios from "axios"; // Import axios for API requests
 import Loading from "@/components/miniComponents/mini";
-
+import { Tablehead } from "@/components/teacher/Tablehead";
+import TableBottomNav from "@/components/teacher/TableBottomNav";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 // Your styles can be imported here
-const sampleHeaderData = ['Student Name']
-const sampleTableData: any[] = []
-
-
+const sampleHeaderData = ["Student Name"];
+const sampleTableData: any[] = [];
+interface TableItem {
+  name: string;
+  markedAs?: string[];
+}
 export default function TablePage() {
   const [assignmentDetails, setAssignmentDetails]: any[] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const [filterState, setFilterState] = useState(false);
+  const [filteredUsers, setFilteredUsers]: any[] = useState([]);
+  const [userSearches, setUserSearches] = useState("");
   const sampleTable: any[] = useMemo(() => sampleTableData, []);
 
   const sampleHeader: any[] = useMemo(() => sampleHeaderData, []);
+  const [itemsPerPage, setItemsPerPage]: any = useState(10);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate the index of the first and last item to display
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sampleTable.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (newPage: React.SetStateAction<number>) => {
+    setCurrentPage(newPage);
+  };
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const searchUser = (e: any) => {
+    e.preventDefault();
+    const searchValue = e.target.value;
+    console.log("Hii", searchValue);
+
+    setUserSearches(searchValue);
+
+    const filteredUsers = sampleTableData.filter((user) =>
+      user.name.toLowerCase().includes(searchValue.toLowerCase())
+    );
+
+    setFilteredUsers(filteredUsers);
+    console.log("Filtered Users:", filteredUsers);
+    if (userSearches.length > 0) {
+      setFilterState(true);
+    } else if (userSearches.length === 0) {
+      setFilterState(false);
+    }
+  };
+
+  const exportToPDF = () => {
+    // Create a new table with all users
+    const table = document.createElement("table");
+    table.className =
+      "w-full mt-20 text-sm text-left text-gray-500 dark:text-gray-400";
+
+    const thead = document.createElement("thead");
+    const tbody = document.createElement("tbody");
+
+    // Add table header
+    const headerRow = document.createElement("tr");
+    sampleHeaderData.forEach((item, index) => {
+      const th = document.createElement("th");
+      th.className = "px-6 py-3";
+      th.textContent = item;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    sampleTableData.forEach(
+      (item: { name: string | null; markedAs: any[] }, rowIndex: number) => {
+        const tr = document.createElement("tr");
+
+        // Apply the class based on the rowIndex
+        tr.className =
+          rowIndex % 2 === 0
+            ? "bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            : "bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700";
+
+        // Create a table cell for the 'name' property
+        const nameTd = document.createElement("td");
+        nameTd.className =
+          "px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white font-mono";
+        nameTd.textContent = item.name;
+        tr.appendChild(nameTd);
+
+        // Check if 'markedAs' exists and map through it to create additional table cells
+        if (item.markedAs) {
+          item.markedAs.forEach((item3, rowIndex3) => {
+            const markedAsTd = document.createElement("td");
+            markedAsTd.className =
+              "px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white";
+            markedAsTd.textContent = item3;
+            tr.appendChild(markedAsTd);
+          });
+        }
+
+        // Append the table row to the table body
+        tbody.append(tr);
+      }
+    );
+
+    // Append the table body to your table element
+    table.append(tbody);
+
+    table.appendChild(tbody);
+
+    table.id = "t1234";
+    // Append the new table to the document
+
+    document.body.appendChild(table);
+    const item: any = document.getElementById("t1234");
+    // // Export the table to PDF
+    html2canvas(table).then((canvas) => {
+      // Convert the canvas to a Blob
+      canvas.toBlob((blob:any) => {
+        // Create a URL for the Blob
+        const blobUrl = URL.createObjectURL(blob);
+    
+        // Create a download link element
+        const downloadLink = document.createElement('a');
+        downloadLink.href = blobUrl;
+    
+        // Set the download attribute with the desired filename (e.g., "table.png" or "table.jpg")
+        downloadLink.download = 'table.png'; // Change the filename as needed
+    
+        // Trigger a click event on the download link to initiate the download
+        downloadLink.click();
+    
+        // Clean up by revoking the Blob URL and removing the canvas
+        URL.revokeObjectURL(blobUrl);
+      }, 'image/png'); // Change 'image/png' to 'image/jpeg' if needed
+    });
+    
+    document.body.removeChild(item);
+  };
+
   const users = [
     "ATKARE PRASHANT RAJENDRA",
     "ADHAV KULDIP JALINDAR",
@@ -92,7 +219,7 @@ export default function TablePage() {
     "UGHADE SHREYA YOGESH",
     "WAGHMARE MONIKA ANAND",
     "WARKHADE ROHINI BAPPASAHEB",
-    "TEST USER"
+    "TEST USER",
   ];
   useEffect(() => {
     // Fetch assignment details and all users
@@ -100,9 +227,6 @@ export default function TablePage() {
       setLoading(true);
       try {
         const response = await axios.get("api/assignment/getAssignmentReport"); // Replace with your API endpoint
-
-        console.log(response);
-        console.log(response.data.userData);
 
         setAssignmentDetails(response.data.userData);
         setAllUsers(response.data.allUsers);
@@ -127,10 +251,11 @@ export default function TablePage() {
       const tbody: { name: string; markedAs: string[] }[] = [];
       table.push(headerRow);
 
-
       for (const assignment of assignmentDetails) {
-        console.log(assignment);
-        sampleHeader.push(assignment.name)
+        if (sampleHeader.length === assignmentDetails.length + 1) {
+          return;
+        }
+        sampleHeader.push(assignment.name);
         headerRow.push(assignment.name);
       }
       users.forEach((x) => {
@@ -138,11 +263,8 @@ export default function TablePage() {
         assignmentDetails.map((y: any) => {
           if (y.completedBy !== null) {
             if (y.completedBy.includes(x)) {
-
               markedAs.push("complete");
             } else {
-              console.log(`${y} does not exist in completedBy array.`);
-
               markedAs.push("Incomplete");
             }
           } else {
@@ -153,85 +275,100 @@ export default function TablePage() {
           name: x,
           markedAs: markedAs,
         });
-
-
+        sampleTable.push({
+          name: x,
+          markedAs: markedAs,
+        });
         return {
           name: x,
           markedAs: markedAs,
         };
       });
-      table.push(tbody)
-      sampleTable.push(tbody)
-      console.log(tbody, 'whole table', table, 'alala');
-
+      table.push(tbody);
     };
     if (assignmentDetails.length > 0) {
       createTableData();
-
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignmentDetails]);
-  console.log(sampleTable, 'sample table');
+
+  function renderTableRow(item: TableItem, rowIndex: number) {
+    return (
+      <tr
+        className={
+          rowIndex % 2 === 0
+            ? "bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            : "bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
+        }
+        key={rowIndex}
+      >
+        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white font-mono">
+          {item.name}
+        </td>
+        {item.markedAs &&
+          item.markedAs.map((item3: string, rowIndex3: number) => (
+            <td
+              key={rowIndex3}
+              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            >
+              {item3}
+            </td>
+          ))}
+      </tr>
+    );
+  }
 
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative ">
       {loading ? (
-         <Loading />
+        <Loading />
       ) : error ? (
         <p>Error loading data</p>
       ) : (
         <div className="relative overflow-x-auto">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <tr className="text-xs w-[100%] text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              {/* <tr> */}
+          <div className="mx-auto max-w-screen-xl px-4 lg:px-12 h-[601px] overflow-y-auto">
+            <Tablehead
+              userSearches={userSearches}
+              searchUser={searchUser}
+              exportToPDF={exportToPDF}
+            />
+            <table
+              id="table1"
+              className="w-full mt-20 text-sm text-left text-gray-500 dark:text-gray-400 "
+            >
+              <thead>
+                <tr className="text-xs w-[100%] text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  {/* <tr> */}
 
-              {sampleHeader.map((item, index) => (
-                <th className="px-6 py-3" key={index}>{item}</th>
-              ))}
-            </tr>
-            
-            <tbody>
-              {loading ? null : (
-
-                sampleTable.map((item: any, rowIndex: any) => (
-
-                  item.map((item2: any, rowIndex2: any) => (
-                    <tr className={
-                      rowIndex % 2 === 0
-                        ? "bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                        : "bg-gray-100 border-b dark:bg-gray-800 dark:border-gray-700"
-                    } key={rowIndex}>
-                      <td key={rowIndex2}
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        {item2.name}
-                      </td>
-                      {item2.markedAs && item2.markedAs.map((item3: any, rowIndex3: any) => (
-
-                        <td key={rowIndex3}
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          {item3}
-                        </td>
-
-
-                      ))}
-
-
-                    </tr>
-
-                  ))
-
-
-                ))
-              )}
-
-
-
-            </tbody>
-
-
-          </table>  </div>
+                  {sampleHeader.map((item, index) => (
+                    <th className="px-6 py-3" key={index}>
+                      {item}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {loading
+                  ? null
+                  : filterState
+                  ? filteredUsers.map((item: any, rowIndex: any) =>
+                      renderTableRow(item, rowIndex)
+                    )
+                  : currentItems.map((item, rowIndex: number) =>
+                      renderTableRow(item, rowIndex)
+                    )}
+              </tbody>
+            </table>
+          </div>
+          <TableBottomNav
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={sampleTable.length}
+            onPageChange={handlePageChange}
+            indexOfFirstItem={indexOfFirstItem} // Pass indexOfFirstItem
+            indexOfLastItem={indexOfLastItem} // Pass indexOfLastItem
+          />
+        </div>
       )}
     </div>
   );
