@@ -5,6 +5,7 @@ import axios from 'axios';
 import Image from 'next/image'
 import Link from 'next/link';
 import Loading from '@/components/miniComponents/mini';
+import { NavForInstructor } from '@/components/teacher/nav/NavForInstructor';
 
 
 
@@ -72,7 +73,10 @@ console.log('array of student');
 
 
     return (
+        <div className=' flex-1'>
+            <NavForInstructor />
         <div className='px-4  py-6 sm:px-8 lg:px-20  items-center pl-16'>
+              
             <ul role="list" className="w-full  divide-gray-100">
 
                 <li key={Math.random()}>
@@ -167,6 +171,7 @@ console.log('array of student');
             </ul>
 
 
+        </div>
         </div>
 
     )

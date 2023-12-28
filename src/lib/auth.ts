@@ -34,6 +34,7 @@ let userType;
         console.log(credentials);
         if (password === "12345") {
           cookies().set("userRole", "Student");
+
           userType='Student'
         } else if (password === "54321") {
           cookies().set("userRole", "Teacher");
@@ -52,10 +53,24 @@ let userType;
 
           return null;
         }
+
         const session = {
           userType:cookies().get("userRole"),
           name: user.name,
         };
+        if(userType=='Student'){
+        const details={
+          name: user.name,
+          rollno: user.rollno,
+          semester: user.semester,
+          course: user.course,
+          college: user.college,
+          
+        }
+          cookies().set("student-details", JSON.stringify(details));
+        
+}
+      
       
         return {
           ...session,

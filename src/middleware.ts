@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  if (path === "/student" && cookie?.value === "Teacher") {
+  if (path === "/overview" && cookie?.value === "Teacher") {
     return new NextResponse(
       JSON.stringify({ success: false, message: "Denied Access" }),
       { status: 401, headers: { "content-type": "application/json" } }
@@ -39,7 +39,7 @@ export function middleware(request: NextRequest) {
   }
   if (isPublicPath && token) {
     if (cookie?.value === "Student") {
-      return NextResponse.redirect(new URL("/student", request.nextUrl));
+      return NextResponse.redirect(new URL("/overview", request.nextUrl));
     } else if (cookie?.value === "Teacher") {
       return NextResponse.redirect(new URL("/teacher", request.nextUrl));
     }
@@ -59,10 +59,10 @@ export const config = {
     "/assignment/:path*",
     "/teacher",
     "/playground",
-    "/student",
     "/preview",
     "/assignmentDetails",
     "/table",
-    "/ai"
+    "/ai",
+    "/courses"
   ],
 };

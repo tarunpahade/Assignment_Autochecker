@@ -6,6 +6,7 @@ import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { ObjectId } from 'mongodb';
 import Link from 'next/link';
 import Loading from '@/components/miniComponents/mini';
+import { NavForInstructor } from '@/components/teacher/nav/NavForInstructor';
 
 interface AssignmentData {
     _id: string;
@@ -27,7 +28,7 @@ const Page = ({ params }: any) => {
     const _id = params.id
     const searchParams = useSearchParams()
  
-    const search = searchParams.get('data')
+    const search = searchParams!.get('data')
     const [userData] = useState(JSON.parse(search!))
     const [assignments, setAssignments] = useState({
         name: '',
@@ -35,30 +36,14 @@ const Page = ({ params }: any) => {
         dateUploaded: '',
         image: ''
     })
-    console.log(userData);
+    console.log(userData,'THIS OIS USER DATA');
     
 
     const [fileContent, setFileContent] = useState('');
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const handleFileChange = (event: any) => {
-        const selectedFile = event.target.files[0];
-
-        if (selectedFile) {
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                const content = e.target?.result as string;
-                setFileContent(content);
-                // setIsSubmitted(true)
-                console.log(content);
-
-            };
-
-            reader.readAsText(selectedFile);
-        }
-    };
+  
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,8 +55,7 @@ const Page = ({ params }: any) => {
 
                 setAssignments(response.data.assignment);
                 console.log(response.data);
-
-                //   console.log(response.data.count, response);
+               //   console.log(response.data.count, response);
 
                 setLoading(false);
             } catch (error: any) {
@@ -83,7 +67,7 @@ const Page = ({ params }: any) => {
         };
 
         fetchData();
-    }, [_id]); // The empty array as the second argument ensures the effect runs only once after the initial render
+    }, [_id, userData]); // The empty array as the second argument ensures the effect runs only once after the initial render
 
     if (loading) {
         return <Loading />;
@@ -94,6 +78,8 @@ const Page = ({ params }: any) => {
     }
 
     return (
+        <div className='flex-1'>
+        
         <div className='px-16'>
 
             <ul role="list" className="w-full  divide-gray-100 ">
@@ -195,6 +181,7 @@ const Page = ({ params }: any) => {
                 </div>
             </ul>
 
+        </div>
         </div>
 
     )

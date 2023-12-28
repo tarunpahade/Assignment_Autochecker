@@ -13,7 +13,6 @@ interface assignmentsDatabase {
   image: string;
   uploadedBy: string;
   forYear: string;
-  repoLink: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -21,6 +20,7 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const image = reqBody.image;
     if (reqBody.image) {
+      
       const awsS3link = await uploadBase64Image(image);
       reqBody.image = awsS3link;
       console.log(awsS3link, "this is link for api");
@@ -41,7 +41,6 @@ export async function POST(request: NextRequest) {
       dateUploaded: datainDatabase.dateUploaded,
       submissionDate: datainDatabase.submissionDate,
       uploadedBy: datainDatabase.uploadedBy,
-      repoLink: datainDatabase.repoLink,
       completedCount: 0,
     });
     console.log(res3);

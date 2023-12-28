@@ -22,27 +22,33 @@ export async function POST(request: NextRequest, res: NextResponse) {
       filteredAssignments.map(async (y) => {
         console.log("starting to map");
 
-        const completed = await CompleteAssignment.findOne({
+        const completed = await CompleteAssignment.findOne({ 
           assignmentId: y._id,
         });
-        console.log(completed);
+        console.log(completed,'thses are completed assignment');
         const filteredAssignment = {
           ...y,
         };
 
-        if (completed!.completedBy) {
+        if (completed!.completedBy  && Array.isArray(completed!.completedBy)) {
           const filtered = completed!.completedBy;
-          console.log(filtered);
+
           const emailExists = filtered.some(
-            (feedback: any) => feedback.email === email
+            (feedback: any) => feedback.name === email
           );
-          filteredAssignment.markedAs = "complete";
-          filteredAssignment.submittedCode= filtered.find((feedback: any) => feedback.email === email)?.submittedCode
-          const result = filtered.find((feedback: any) => feedback.email === email)?.result
-          filteredAssignment.result=result
-        } else {
-          filteredAssignment.markedAs = "Incomplete";
-          filteredAssignment.result = null;
+          if (emailExists) {
+            console.log(filtered,'this is filtered');
+          
+            filteredAssignment.markedAs = "complete";
+            filteredAssignment.submittedCode= filtered.find((feedback: any) => feedback.name === email)?.submittedCode
+            const result = filtered.find((feedback: any) => feedback.name === email)?.result
+            filteredAssignment.result=result
+           
+          }  else {
+            filteredAssignment.markedAs = "Incomplete";
+            filteredAssignment.result = null;
+          }
+          
         }
 
         return filteredAssignment;

@@ -10,6 +10,8 @@ import Link from "next/link"
 
 import { useRouter,redirect } from "next/navigation"
 import { useEffect, useState } from "react"
+import { InstructorNav } from "../dashboard/components/InstructorNav"
+import { NavForInstructor } from "@/components/teacher/nav/NavForInstructor"
 
 
 export default function Example() {
@@ -63,9 +65,6 @@ const router =useRouter()
     return <p>Some Error While Featching Assignments</p>;
   }
 
-  const reportDetails= async() =>{
-    redirect('/table')
-  }
   
  
   
@@ -96,8 +95,10 @@ const router =useRouter()
     
     return (
         <main>
+        
 
             <div className="mx-auto max-w-6xl py-6 sm:px-6 lg:px-8">
+            <InstructorNav />
                 <h1 className={`text-2xl font-bold tracking-tight  dark:text-gray-900 `}>
                     No assignments Uploaded !!
                 </h1>
@@ -123,7 +124,7 @@ const router =useRouter()
     <>
 
       <main>
-
+      <NavForInstructor />
         <div className="mx-auto max-w-6xl py-6 sm:px-6 lg:px-8">
           <div className="flex justify-between">
             <h1 className={`text-2xl font-bold tracking-tight   `}>

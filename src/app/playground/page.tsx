@@ -7,28 +7,59 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { IconCheck } from "@/components/ui/icons";
+import CodeBlock from "@/components/ui/codeBlock";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import { htmlLanguage } from '@codemirror/lang-html' 
+import Split from "react-split";
+import useLocalStorage from "@/hooks/useLocalStorage";
+
+
 
 export default function Index() {
   const { data: session } = useSession();
-  const [code, setCode] = useState("");
   const [showAIresult, setshowAIresult] = useState(false);
   const [error, setError] = useState(false);
   const [image, setImage] = useState(false);
 
-  const [html, setHtml] = useState(
-    "<h2 className='typing-animation' >Hello There start Your Coding journey here!  🎉</h2>"
-  );
   const [css, setCss] = useState(``);
   const [js, setjs] = useState("");
 
   const searchParams = useSearchParams();
   const [result, setResult] = useState("");
-  const search = searchParams.get("data");
-  console.log(JSON.parse(search!));
-
+  const search = searchParams?.get("data");
+  const parsedData = JSON.parse(search!);
+  const [htmlCode, setHtml] = useState(
+    `
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>${parsedData.name}</title>
+    </head>
+    <body>
+    <style>
+    *{
+      color: white;
+      font-family: monospace;
+     }
+       </style>
+       
+       <h2  >Hello There start Your Coding journey here!  🎉</h2>
+      <script>
+  
+      </script>
+      </body>`
+  );
   const [userData, setUserData] = useState(JSON.parse(search!));
   const navigation = [];
-  console.log(userData);
+
+  const [fontSize, setFontSize] = useLocalStorage("lcc-fontSize", "12px");
+
+const [settings, setSettings] = useState({
+  fontSize: fontSize,
+  settingsModalIsOpen: false,
+  dropdownIsOpen: false,
+});
 
   if (userData.uploadType === "Single Document") {
     navigation.push({ name: "index.html", href: "#" });
@@ -51,40 +82,34 @@ export default function Index() {
   ); // Initialize with the default selected button
   const [loading, setloading] = useState(false);
 
-  const handleButtonClick = (buttonName: React.SetStateAction<string>) => {
-    setSelected(buttonName);
+  
 
-    if (buttonName === "index.html") {
-      setCode(html);
-    } else if (buttonName === "styles.css") {
-      setCode(css);
-    } else if (buttonName === "index.js") {
-      setCode(js);
-    }
-  };
+  const onCodeChange = (e: any) => {
+    console.log("Hii",e);
 
-  const onCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newCode = e.target.value;
-
+    const newCode = e;
+console.log(newCode);
     if (selected === "index.html") {
-      console.log("Hii");
+      console.log("Hii",e);
 
-      setHtml(e.target.value);
+       setHtml(e);
     } else if (selected === "styles.css") {
-      setCss(e.target.value);
+      setCss(e);
     } else if (selected === "index.js") {
-      setjs(e.target.value);
+      setjs(e);
     }
 
-    // Update the iframe's src when the code changes
-    const iframe = document.getElementById(
-      "preview-iframe"
-    ) as HTMLIFrameElement;
-    if (iframe) {
-      const blob = new Blob([newCode], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      iframe.src = url;
-    }
+    // // Update the iframe's src when the code changes
+    // const iframe = document.getElementById(
+    //   "preview-iframe"
+    // ) as HTMLIFrameElement;
+    // if (iframe) {
+    //   const blob = new Blob([newCode], { type: "text/html" });
+    //   const url = URL.createObjectURL(blob);
+    //   console.log(url);
+      
+    //   iframe.src = url;
+    // }
   };
   useEffect(() => {
     let index = 0;
@@ -110,25 +135,18 @@ export default function Index() {
     setloading(true);
     console.log("yoooo");
     try {
-      console.log(selected, session?.user.name,'hshsh');
-      setError(false)
+      console.log(selected, session?.user.name, "hshsh");
+      setError(false);
       const response = await axios.post("api/users/completeAssignment", {
         currecntAssignment: userData,
         name: session?.user.name,
-        submittedCode: `<!DOCTYPE html><html><head>      </head><body><style>body{color: white}${css} </style>
-      ${html}
-      <script>
-      ${js}
-      </script>
-      </body>
-      </html>
-      `,
+        submittedCode: htmlCode,
       });
       console.log(response.data);
-      
+
       const newUserData = userData;
       newUserData.markedAs = "complete";
-      newUserData.submittedCode = html;
+      newUserData.submittedCode = htmlCode;
       setUserData(newUserData);
       setloading(false);
       setResult(response.data);
@@ -148,14 +166,7 @@ export default function Index() {
   return (
     <div id="index" className="absolute top-0 w-full h-full bg-gray-900">
       <div className="absolute top-0 bg-gray-900 pl-3  items-baseline space-x-4 w-[52%] pt-5">
-        <div className="block w-[90%] mt-2 ml-0 p-6 border  rounded-lg shadow  bg-gray-800 border-gray-700 hover:bg-gray-700">
-          <h5 className="mb-2 text-xl font-bold tracking-tight text-white">
-            Assignment
-          </h5>
-          <p className="w-full font-normal text-gray-400">
-            {userData.name} {userData.description}
-          </p>
-        </div>
+        
         {error ? (
           <div className="block w-[90%] mt-2 ml-0 p-6 border  rounded-lg shadow  bg-gray-800 border-gray-700 hover:bg-gray-700">
             <p className="w-full font-normal text-gray-400">
@@ -163,59 +174,52 @@ export default function Index() {
             </p>
           </div>
         ) : null}
-        <div className="mt-8">
-          {navigation.map((item) => (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                handleButtonClick(item.name);
-              }}
-              key={item.name}
-              className={`${
-                selected === item.name
-                  ? "bg-gray-200 text-black"
-                  : "bg-gray-900 text-white"
-              }  hover:bg-slate-700 hover:text-white  rounded-md px-5 text-sm font-medium h-[35px]  bg-gray-800 text-white '`}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
+
         <div id="textareaDiv" className=" mt-5 0 h-[370px] w-[80%]">
           {userData.markedAs === "complete" ? (
             <>
               <h5 className="mb-2 text-xl font-bold tracking-tight text-white">
                 See Submitted Code Here
               </h5>
-              <textarea
+              <CodeBlock
                 disabled={true}
-                spellCheck="false"
+                language={"html"}
                 value={userData.submittedCode}
-                className="code-input"
-                onChange={onCodeChange}
               />
             </>
           ) : (
-            <textarea
-              disabled={userData.markedAs === "complete" ? true : false}
-              spellCheck="false"
-              value={
-                selected === "index.html"
-                  ? html
-                  : selected === "styles.css"
-                  ? css
-                  : selected === "ai"
-                  ? userData.submittedCode
-                  : js
-              }
-              className="code-input"
-              onChange={onCodeChange}
-            />
+            
+			<Split className='h-[calc(100vh-94px)]' direction='vertical' sizes={[60, 40]} minSize={60}> 
+				<div className='w-full h-full overflow-auto'>
+            <CodeMirror
+            value={htmlCode}
+						theme={vscodeDark}
+						onChange={onCodeChange}
+             extensions={[htmlLanguage]}
+             style={{ fontSize: settings.fontSize }}						
+                        className="h-full overflow-auto"
+					/>
+          </div>
+          </Split>
+            // <CodeBlock
+            //   disabled={false}
+            //   value={html}
+            //   language={"html"}
+            //   onChange={onCodeChange}
+            // />
           )}
         </div>
       </div>
       <div className="absolute left-[48%] w-[48%] h-[65%] pt-5 ml-4">
-        <div className="block    border h-full mb-10 w-[100%]   p-2 rounded-lg shadow  bg-gray-800 border-gray-700 ">
+      <div className="block w-[90%] mt-2 ml-0 p-6 border  rounded-lg shadow  bg-gray-800 border-gray-700">
+          {/* <h5 className="mb-2 text-lg font-bold tracking-tight text-white">
+            Assignment
+          </h5> */}
+          <p  style={{fontSize:'12px'}} className="w-full font-normal text-gray-400">
+            {userData.name} {userData.description}
+          </p>
+       
+        <div className="block  mt-5  border  mb-10 w-[100%]  h-60 p-2 rounded-lg shadow  bg-gray-800 border-gray-700 ">
           {showAIresult ? (
             <div className="block w-[90%] mt-2 ml-0 p-6   rounded-lg shadow  ">
               <h5 className="mb-2 text-xl font-bold tracking-tight text-white">
@@ -269,23 +273,7 @@ ${
 ${userData.submittedCode}
 </body>`
     : `
-  <body>
-<style>
-*{
-  color: white;
-  font-family: math;
-              }
-              </style>
-
-  <style>
-  
-  ${css}
-  </style>
-  ${html}
-  <script>
-  ${js}
-  </script>
-  </body>
+  ${htmlCode}
  `
 }
 </html>
@@ -295,17 +283,17 @@ ${userData.submittedCode}
             </>
           )}
         </div>
+</div>
 
         {userData.markedAs === "complete" ? (
-          <div className="flex h-12 items-center justify-center">
+          <div className="flex h-12 items-center mt-5 justify-center">
             <div className="flex space-x-2">
               <button
                 onClick={(e) => {
                   e.preventDefault();
                   console.log("hii");
                   setshowAIresult(false);
-                  setImage(false)
-
+                  setImage(false);
                 }}
                 className="inline-flex items-center justify-center rounded-md text-sm font-medium shadow ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-4 py-2"
               >
@@ -323,8 +311,27 @@ ${userData.submittedCode}
                 onClick={(e) => {
                   e.preventDefault();
                   console.log("hii");
-                  // setResult(userData.result)
-setImage(false)
+                  setshowAIresult(false);
+                  setImage(false);
+                }}
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium shadow ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-4 py-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  className="h-4 w-4 mr-2"
+                >
+                  <path d="M197.67 186.37a8 8 0 0 1 0 11.29C196.58 198.73 170.82 224 128 224c-37.39 0-64.53-22.4-80-39.85V208a8 8 0 0 1-16 0v-48a8 8 0 0 1 8-8h48a8 8 0 0 1 0 16H55.44C67.76 183.35 93 208 128 208c36 0 58.14-21.46 58.36-21.68a8 8 0 0 1 11.31.05ZM216 40a8 8 0 0 0-8 8v23.85C192.53 54.4 165.39 32 128 32c-42.82 0-68.58 25.27-69.66 26.34a8 8 0 0 0 11.3 11.34C69.86 69.46 92 48 128 48c35 0 60.24 24.65 72.56 40H168a8 8 0 0 0 0 16h48a8 8 0 0 0 8-8V48a8 8 0 0 0-8-8Z"></path>
+                </svg>
+                View Question
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  console.log("hii");
+                  setResult(userData.result)
+                  setImage(false);
 
                   setshowAIresult(true);
                 }}
@@ -343,13 +350,13 @@ setImage(false)
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  setshowAIresult(false)
-                  setImage(true)
                   
+                  setshowAIresult(false);
+                  setImage(true);
                 }}
                 className="inline-flex items-center justify-center rounded-md text-sm font-medium shadow ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-4 py-2"
               >
-                <IconCheck  className="mr-5"/>
+                <IconCheck className="mr-5" />
                 {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -363,15 +370,13 @@ setImage(false)
             </div>
           </div>
         ) : (
-          <div className="px-5 ml-5 ">
+          <div className="px-5 ml-5 mt-5">
             {userData.image ? (
               <button
-              onClick={()=>{
-
-                setImage(true)
-                
-              }}
-                className={` bg-slate-700 py-2.5 mr-5   text-white   rounded-md px-5 text-base font-medium h-[43px] right-0 
+                onClick={() => {
+                  setImage(true);
+                }}
+                className={` bg-slate-700 py-2 mr-5   text-white   rounded-md px-5 text-base font-medium h-[43px] right-0 
                  `}
               >
                 View Image
@@ -379,13 +384,14 @@ setImage(false)
             ) : null}
 
             <button
-              className={` bg-slate-700 py-2.5   text-white   rounded-md px-5 text-base font-medium h-[43px] right-0 
+              className={` bg-slate-700 py-2 mr-5  text-white   rounded-md px-5 text-base font-medium h-[43px] right-0 
                  `}
-              onClick={()=>setImage(false)}
-
+              onClick={() => setImage(false)}
             >
               Browser Result
             </button>
+            
+            
             <button
               onClick={SendData}
               type="button"
@@ -418,7 +424,9 @@ setImage(false)
             </button>
           </div>
         )}
+
       </div>
+
     </div>
   );
 }

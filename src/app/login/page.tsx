@@ -32,7 +32,7 @@ export default function Login() {
             if (signInResponse && !signInResponse.error) {
 
                 if (JSON.parse(user.password) === 12345) {
-                    router.push('/student')
+                    router.push('/courses')
 
                 } else if (JSON.parse(user.password) === 54321) {
                     router.push('/teacher')

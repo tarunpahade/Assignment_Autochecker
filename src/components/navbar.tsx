@@ -23,7 +23,7 @@ const Navbar = () => {
     
     useEffect(() => {
         // Check the pathname and set showHeader accordingly
-        if (pathname === '/student'  ||  pathname === '/teacher' || pathname === '/assignment/:path*' || pathname === '/assignmentDetails/:path') {
+        if (pathname === '/overview'  ||  pathname === '/teacher' || pathname === '/assignment/:path*' || pathname === '/assignmentDetails/:path') {
           setshowHeader(true);
         } else {
           setshowHeader(false);
@@ -74,14 +74,8 @@ const Navbar = () => {
 
         setCurrentNavItem(itemName);
     };
-    let newPathname = pathname.slice(1).substring(0, pathname.lastIndexOf('/'));
-if(pathname==='/ai'){
+    let newPathname = pathname
 
-newPathname='/ai'
-}
-if(pathname === '/table'){
-    newPathname='/table'
-}    
 return (
         <>
             <Disclosure as="nav" className={`${theme === 'dark' ? 'dark:bg-slate-900' : 'bg-white border-b-[0.5px] border-gray-300'

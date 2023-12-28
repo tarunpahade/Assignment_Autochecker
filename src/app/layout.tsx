@@ -1,10 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import { NextAuthProvider } from './providers'
-import { ThemeProvider } from 'next-themes';
-import Navbar from '@/components/navbar'
-import { useRouter } from 'next/navigation'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 //theme provider is causing errors of creater cpontext
 export const metadata: Metadata = {
@@ -18,6 +15,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
+
   return (
     <html lang="en">
     
@@ -25,9 +23,11 @@ export default function RootLayout({
       <NextAuthProvider>
      
       <body >
+      <SpeedInsights/>
       <div className="min-h-full"   >
-        <Navbar />
-      
+
+              
+     
         {children}
         </div>
         
