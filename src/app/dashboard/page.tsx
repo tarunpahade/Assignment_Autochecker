@@ -14,10 +14,7 @@ import { SetStateAction, useState } from "react"
 import { ReportSection } from "@/app/dashboard/components/reportSection"
 import { InstructorNav } from "./components/InstructorNav"
 
-export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Example dashboard app built using the components.",
-}
+
 
 export default function DashboardPage() {
   const [button, setbutton] = useState('overview')

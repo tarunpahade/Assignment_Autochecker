@@ -18,7 +18,7 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  if (path === "/overview" && cookie?.value === "Teacher") {
+  if (path === "/courses" && cookie?.value === "Teacher") {
     return new NextResponse(
       JSON.stringify({ success: false, message: "Denied Access" }),
       { status: 401, headers: { "content-type": "application/json" } }

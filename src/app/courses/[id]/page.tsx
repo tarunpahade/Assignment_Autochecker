@@ -65,28 +65,28 @@ const PageContent = ({ lang }: any) => {
     filteredUsers = problemsArray;
   }
 
-  const [fetchedProblems, setFetchedProblems] = useState();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  // const [fetchedProblems, setFetchedProblems] = useState();
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(false);
 
-  useEffect(() => {
-    // Fetch assignment details and all users
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const response = await axios.post("api/assignment/getAssignmentReport");
+  // useEffect(() => {
+  //   // Fetch assignment details and all users
+  //   async function fetchData() {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.post("api/assignment/getAssignmentReport");
 
-        setFetchedProblems(response.data);
+  //       setFetchedProblems(response.data);
 
-        setLoading(false);
-      } catch (error) {
-        setError(true);
-        setLoading(false);
-      }
-    }
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setError(true);
+  //       setLoading(false);
+  //     }
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return (
     <div>

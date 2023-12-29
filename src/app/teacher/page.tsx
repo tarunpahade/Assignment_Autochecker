@@ -8,7 +8,7 @@ import axios from "axios"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 
-import { useRouter,redirect } from "next/navigation"
+import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
 import { InstructorNav } from "../dashboard/components/InstructorNav"
 import { NavForInstructor } from "@/components/teacher/nav/NavForInstructor"
@@ -20,10 +20,7 @@ export default function Example() {
   const [assignments, setAssignments] = useState<assignments[]>([]);
   const [dataNull, setdataNull] = useState(false)
   const { status } = useSession()
-  const { data: session } = useSession()
-const router =useRouter()
   const [loading, setLoading] = useState(true);
-  const [loadingReport, setLoadingReport] = useState(false);
 
   const [error, setError] = useState(false);
   
