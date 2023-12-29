@@ -1,9 +1,17 @@
 import assert from "assert";
 import { Problem } from "@/types/problems";
+import axios from "axios";
 
 const starterCodeTwoSum = `function twoSum(nums,target){
   // Write your code here
 };`;
+const starterFunctionNames = {
+    Javascript: 'function twoSum(',
+    Java: 'public static int[] twoSum(',
+    Python: 'def twoSum(',
+    Cpp: 'int* twoSum(',
+    C: 'int* twoSum('
+};
 
 // checks if the user has the correct code
 const handlerTwoSum = (fn: any) => {
@@ -35,7 +43,47 @@ const handlerTwoSum = (fn: any) => {
 		throw new Error(error);
 	}
 };
+const handlerTwoSumMultipleLanguages = async (language:string, userCode:string ) => {
+    const nums = [
+        [2, 7, 11, 15],
+        [3, 2, 4],
+        [3, 3],
+    ];
+    const targets = [9, 6, 6];
+    const answers = [
+        [0, 1],
+        [1, 2],
+        [0, 1],
+    ];
 
+    try {
+        for (let i = 0; i < nums.length; i++) {
+            let result;
+
+            if (language === 'Javascript') {
+                // Execute JavaScript function locally
+                const fn = new Function(`return ${userCode}`)();
+                result = fn(nums[i], targets[i]);
+            } else {
+                // Make a request to the backend for other languages
+                const response = await axios.post('http://localhost:3000/run', {
+                    language: language,
+                    code: userCode,
+                    input: { nums: nums[i], target: targets[i] }
+                });
+                result = response.data.output; 
+            }
+
+            assert.deepStrictEqual(result, answers[i]);
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Error in handlerTwoSum:", error);
+        return false;
+    }
+};
+2.
 export const twoSum: Problem = {
 	id: "two-sum",
 	title: "1. Two Sum",
@@ -79,7 +127,10 @@ export const twoSum: Problem = {
 <strong>Only one valid answer exists.</strong>
 </li>`,
 	handlerFunction: handlerTwoSum,
+	handlerTwoSumMultipleLanguages,
 	starterCode: starterCodeTwoSum,
 	order: 1,
 	starterFunctionName: "function twoSum(",
+	starterFunctionNameMultipleLanguages: starterFunctionNames,
+
 };

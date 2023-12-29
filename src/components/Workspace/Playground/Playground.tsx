@@ -179,7 +179,7 @@ console.log('Startying polling');
 		
 			if (success) {
 				const { status: jobStatus, output: jobOutput } = job2;
-				console.log(job2);
+				console.log(job2,'i am job2 ');
 				
 				setStatus(jobStatus);
 				setJobDetails(JSON.stringify(job2));
@@ -206,64 +206,69 @@ console.log('Startying polling');
 };
 
 // Runs Function and tests in javascript
-	const handleSubmit2 = async (e: any) => {
-		e.preventDefault()
-		try {
+const handleSubmit2 = async (e: any) => {
+    e.preventDefault();
+    try {
+        const newuserCode = userCode.slice(userCode.indexOf(problem.starterFunctionName));
+        
+        if (value === 'Javascript') {
+            // Execute locally for JavaScript
+            const cb = new Function(`return ${newuserCode}`)();
+            const handlerFunction = problems[pid as string].handlerFunction;
 
+            if (typeof handlerFunction === "function") {
+                const success = handlerFunction(cb);
+                handleSuccess(success);
+            }
+        } else {
+            const cb = new Function(`return ${newuserCode}`)();
+            const handlerFunction = problems[pid as string].starterFunctionNameMultipleLanguages;
+			const success = handlerFunction(value, userCode);
+console.log(success);
 
+            const response = await axios.post('http://localhost:3000/run', {
+                language: value,
+                code: newuserCode,
+            });
 
-			const newuserCode = userCode.slice(userCode.indexOf(problem.starterFunctionName));
-			const cb = new Function(`return ${newuserCode}`)();
+            if (response.data.job.status === 'success') {
+                handleSuccess(true);
+            } else {
+                handleFailure();
+            }
+        }
+    } catch (error: any) {
+        console.log(error.message);
+        handleFailure();
+    }
+};
 
-			// Assuming problem.handlerFunction is a string representing the entire function
-			const handlerFunction = problems[pid as string].handlerFunction;
-			console.log(cb, 'this is cb', handlerFunction);
+const handleSuccess = (success: boolean) => {
+    if (success) {
+        toast({
+            title: 'Congrats! All tests passed!',
+            description: "Your code was successfully submitted",
+        });
 
-			if (typeof handlerFunction === "function") {
-				console.log('This is handler function')
-				const success = handlerFunction(cb);
-				if (success) {
-					// alert('Congrats! All tests passed!')
-					toast({
-						title: 'Congrats! All tests passed!',
-						description: "Your  code was successfully submitted",
-					});
+        setUserCode(userCode);
+        setSuccess(true);
+        setTimeout(() => {
+            setSuccess(false);
+        }, 4000);
 
-					setUserCode(newuserCode)
-					// alert('The answer is correct')
-					setSuccess(true);
-					setTimeout(() => {
-						setSuccess(false);
-					}, 4000);
+        setSolved(true);
+    } else {
+        handleFailure();
+    }
+};
 
-					// const userRef = doc(firestore, "users", user.uid);
-					// await updateDoc(userRef, {
-					// 	solvedProblems: arrayUnion(pid),
-					// });
-					setSolved(true);
-				}
-			}
-		} catch (error: any) {
-			console.log(error.message);
-			if (
-				error
-			) {
-				// alert('Oops! One or more test cases failed')
-				toast({
-					variant: "destructive",
-					title: "Uh oh! Something went wrong.",
-					description: "There was a problem in your code.",
-
-				})
-			} else {
-				toast({
-					variant: "destructive",
-					title: "Uh oh! Something went wrong.",
-					description: "There was a problem with your request.",
-				})
-			}
-		}
-	};
+const handleFailure = () => {
+    toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your code or request.",
+    });
+};
 
 	//Stores User Details and sends to submitProblem
 	const SendData = async (e: any) => {

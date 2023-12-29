@@ -9,6 +9,8 @@ export type Problem = {
 	handlerFunction: ((fn: any) => boolean) | string;
 	starterFunctionName: string;
 	difficulty: string,
+	starterFunctionNameMultipleLanguages?: any,
+	handlerTwoSumMultipleLanguages?: any
 
 };
 export type Example = {
