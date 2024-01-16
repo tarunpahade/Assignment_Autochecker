@@ -22,17 +22,9 @@ const ProblemPage = ({ params }:ProblemPageProps) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-
-
-                // const response =await fetchProblemData(params.pid)
                 const response = await axios.post('/api/problems/getProblem', { id: id }); // Replace with your API endpoint
-
-
                 console.log(response.data,'this is client');
 				setProblems(response.data)
-               //   console.log(response.data.count, response);
-			   
-
                 setLoading(false);
             } catch (error: any) {
                 console.log(error.message);
@@ -58,7 +50,7 @@ const ProblemPage = ({ params }:ProblemPageProps) => {
 
 
 	return (
-		<div >
+		<div className="absolute left-0 z-50 top-0 w-full">
 			<Topbar problemPage />
 			
 			<Workspace problem={problem} />

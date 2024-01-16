@@ -19,6 +19,23 @@ export const validParenthesesHandler = (fn: any) => {
 const starterCodeValidParenthesesJS = `function validParentheses(s) {
   // Write your code here
 };`;
+const starterCodeValidParentheses = {
+    js: `function isValid(s) { 
+        // Write Your Code Here 
+    }`,
+    java: `public boolean isValid(String s) {
+        // Write Your Code Here
+    }`,
+    py: `def isValid(s):     
+        # Write your code here
+    `,
+    cpp: `bool isValid(string s) {
+        // Write your code here
+    }`,
+    c: `int isValid(char * s) {
+        // Write your code here
+    }`
+};
 
 export const validParentheses: Problem = {
 	id: "valid-parentheses",
@@ -55,4 +72,6 @@ export const validParentheses: Problem = {
 	starterCode: starterCodeValidParenthesesJS,
 	starterFunctionName: "function validParentheses(",
 	order: 4,
+	starterFunctionNameMultipleLanguages: starterCodeValidParentheses,
+
 };

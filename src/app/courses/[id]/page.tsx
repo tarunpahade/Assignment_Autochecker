@@ -1,120 +1,124 @@
-"use client";
-import Sidebar from "@/components/student/sidebar";
-import { columns } from "../components/columns";
-import React, { useEffect, useState } from "react";
-import { DataTable } from "../components/table";
-import { problemsArray } from "@/utils/javascript";
-import { cLanguage, javaData } from "../data/tasks";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+'use client'
+import Loading from "@/components/miniComponents/mini"
+import { Popup } from "@/components/popup"
+import { AssignmentsList } from "@/components/teacher/assignments"
+import { getCookies } from "@/lib/utils"
+import { assignments } from "@/types/interface"
+import axios from "axios"
+import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
+import { useEffect, useState } from "react"
 
-export default function Page({ params }: any) {
-  const lang = params.id;
-  return (
-    <main>
-      <div>
-        <button
-          data-drawer-target="default-sidebar"
-          data-drawer-toggle="default-sidebar"
-          aria-controls="default-sidebar"
-          type="button"
-          className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-        >
-          <span className="sr-only">Open sidebar</span>
-          <svg
-            className="w-6 h-6"
-            aria-hidden="true"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              clip-rule="evenodd"
-              fill-rule="evenodd"
-              d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-            ></path>
-          </svg>
-        </button>
+export default function Example({params}:any) {
+  const _id = params.id
+  const [showPopupState, setshowPopup] = useState(false);
+  const [selectedOption] = useState('all');
+  const [assignments, setAssignments] = useState<assignments[]>([]);
+  const [dataNull, setdataNull] = useState(false)
+  const { status } = useSession()
+  const [loading, setLoading] = useState(true);
 
-        <Sidebar currentPath={"Courses"} />
+  const [error, setError] = useState(false);
 
-        <div className="p-4 sm:ml-64">
-          <PageContent lang={lang} />
-        </div>
-      </div>
-    </main>
-  );
-}
+  const [userDetails, setUserDetails]: any = useState({
+    college: 'Dummy College',
+    department: 'CSE',
+    university: 'Dummy University',
+  })
 
-const PageContent = ({ lang }: any) => {
-  const router = useRouter();
+  useEffect(() => {
+    console.log(getCookies('user-details'));
+    
+    setUserDetails(getCookies('user-details'));
+  }, []);
 
-  const [title, settitle] = useState(lang);
-  let filteredUsers;
-  if (lang === "javascript") {
-    filteredUsers = problemsArray;
-    //    setLanguageNotAvailable(false);
-  } else if (lang === "C") {
-    filteredUsers = cLanguage;
-    // setLanguageNotAvailable(false);
-  } else if (lang === "Java") {
-    // setLanguageNotAvailable(false);
-    filteredUsers = javaData;
-  } else if (lang === "Javascript") {
-    filteredUsers = problemsArray;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        
+        const response = await axios.post('/api/users/assignmentByName', { name: getCookies('user-details').name }); 
+        setAssignments(response.data);
+        if (response.data.length === 0) {
+          setLoading(false)
+          setdataNull(true)
+        }
+        setLoading(false);
+      } catch (error: any) {
+        console.log(error);
+        
+        setError(true);
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, [userDetails]);
+
+  if (status === 'unauthenticated') {
+    redirect('/login')
   }
 
-  // const [fetchedProblems, setFetchedProblems] = useState();
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState(false);
+  if (loading) {
+    return <Loading />;
+  }
 
-  // useEffect(() => {
-  //   // Fetch assignment details and all users
-  //   async function fetchData() {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.post("api/assignment/getAssignmentReport");
+  if (error) {
+    return <p>Some Error While Featching Assignments</p>;
+  }
 
-  //       setFetchedProblems(response.data);
+  const filteredAssignments = selectedOption === 'all' ? assignments : assignments.filter(item => item.semester === selectedOption);
 
-  //       setLoading(false);
-  //     } catch (error) {
-  //       setError(true);
-  //       setLoading(false);
-  //     }
-  //   }
+  const onAssignmentPress = () => {
+    setshowPopup(true)
+  }
+  const closeForm = () => {
+    setshowPopup(false)
+  }
 
-  //   fetchData();
-  // }, []);
+  const getFormDetailsAndAppendData = (data: any) => {
+    const data2 = assignments
+    data2.push(data)
+    setAssignments(data2)
+    setdataNull(false)
+  }
+  if (dataNull) {
+    return (
+      <main>
+        <div className="mx-auto max-w-6xl py-6 sm:px-6 lg:px-8">
+          <h1 className={`text-2xl font-bold tracking-tight  dark:text-gray-900 `}>
+            No assignments Uploaded !!
+          </h1>
+        </div>
+
+        {showPopupState ? (
+          <Popup close={closeForm} getFormDetailsAndAppendData={getFormDetailsAndAppendData} />
+        ) : null
+
+        }
+      </main>
+    )
+  }
 
   return (
-    <div>
-      <div className="flex justify-between w-[20%]">
-        <ArrowLeft
-          onClick={() => {
-            router.back();
-          }}
-          className="mt-2"
-        />
-
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight mb-5 ml-3">
-          {title}
-        </h1>
-      </div>
-      <div className="  max-w-screen-xl  lg:px-12 w-full items-center "></div>
-      <div className=" max-w-screen-lg px-4  h-[530px] overflow-y-auto justify-center align-middle">
-        <div className="flex">
-          <div className="grid grid-cols-3 gap-4"></div>
+    <>
+      <main>
+        <div className="mx-auto max-w-6xl">
+          <div className="flex justify-between">
+            <h1 className={`text-2xl font-bold tracking-tight   `}>
+              Subject for {_id}
+            </h1>
+            <div>
+            </div>
+          </div>
+          <ul role="list" className="divide-y mt-5 divide-gray-100">
+            <AssignmentsList userType="teacher" data={filteredAssignments} onPress={onAssignmentPress} />
+          </ul>
         </div>
-        {!filteredUsers ? (
-          <h1 className="scroll-m-20 text-4xl font-bold tracking-tight mb-5 ml-3">
-            Language Specified Not Available
-          </h1>
-        ) : (
-          <DataTable data={filteredUsers} columns={columns} />
-        )}
-      </div>
-    </div>
-  );
-};
+     {showPopupState ? (
+          <Popup userDetails={userDetails} close={closeForm} getFormDetailsAndAppendData={getFormDetailsAndAppendData} />
+        ) : null
+      }
+      </main>
+    </>
+  )
+}

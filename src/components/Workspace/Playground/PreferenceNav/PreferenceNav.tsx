@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit, AiOutlineSetting } from "react-icons/ai";
 import { ISettings } from "../Playground";
 import { ComboboxDemo } from "@/components/comboBox/comboBox";
-// import SettingsModal from "@/components/Modals/SettingsModal";
 
 type PreferenceNavProps = {
 	settings: ISettings;
 	setSettings: React.Dispatch<React.SetStateAction<ISettings>>;
-	value: string, setValue:any , languages:any
+	value: string, setValue:any , languages:any;
+	handleChange: any
 };
-const PreferenceNav: React.FC<PreferenceNavProps> = ({ setSettings, settings, value, setValue , languages }) => {
+const PreferenceNav: React.FC<PreferenceNavProps> = ({ setSettings, settings, value, setValue , languages,handleChange }) => {
 	const [isFullScreen, setIsFullScreen] = useState(false);
 	
 	const handleFullScreen = () => {
@@ -41,20 +41,9 @@ const PreferenceNav: React.FC<PreferenceNavProps> = ({ setSettings, settings, va
 	return (
 		<div className='flex items-center justify-between bg-dark-layer-2 h-11 w-full '>
 			<div className='flex items-center text-white bg-[#282828]'>
-				{/* <button className='flex cursor-pointer items-center rounded focus:outline-none bg-dark-fill-3 text-dark-label-2 hover:bg-dark-fill-2  px-2 py-1.5 font-medium'>
-					<div className='flex items-center px-1 '>
-						<div className='text-xs text-label-2 text-white'>JavaScript</div>
-					</div>
-				</button> */}
-				<ComboboxDemo value={value} setValue={setValue}  placeholder='Select a language' 
-						// className='w-[100px]'
-						
-						
-						// onChange={(e) => {
-						// 	console.log(e)
-						// 	setValue(e.value)
-						// }}
-						    frameworks={languages}/>
+	
+				<ComboboxDemo bg="bg-[#282828] text-white" handleChange={handleChange} value={value} setValue={setValue}  placeholder='Select a language' 
+					    frameworks={languages}/>
 			
 			</div>
 
@@ -76,7 +65,6 @@ const PreferenceNav: React.FC<PreferenceNavProps> = ({ setSettings, settings, va
 					
 				</button>
 			</div>
-			{/* {settings.settingsModalIsOpen && <SettingsModal settings={settings} setSettings={setSettings} />} */}
 		</div>
 	);
 };

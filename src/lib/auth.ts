@@ -4,9 +4,7 @@ import GithubProvider from "next-auth/providers/github";
 import { cookies } from "next/headers";
 
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcryptjs from "bcryptjs";
 import Users from "@/dbconfig/dbconfig";
-import { redirect, useRouter } from "next/navigation";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.TOKEN_SECRET!,
@@ -28,25 +26,17 @@ export const authOptions: NextAuthOptions = {
 
         const name = credentials?.name as string;
         const password = credentials?.password as string;
-let userType;
 
         console.log(name, password);
         console.log(credentials);
-        if (password === "12345") {
-          cookies().set("userRole", "Student");
-
-          userType='Student'
-        } else if (password === "54321") {
-          cookies().set("userRole", "Teacher");
-          userType='Teacher'
-        }
 
         const token = cookies().get("next-auth.session-token");
         if (!token) {
           cookies().set("next-auth.session-token", password);
         }
 
-        const user = await Users.findOne({ name });
+        const user: any = await Users.findOne({ name });
+        cookies().set("userType", user.userType);
 
         if (!user) {
           console.log("user Not Found");
@@ -55,26 +45,28 @@ let userType;
         }
 
         const session = {
-          userType:cookies().get("userRole"),
+          userType: user.userType,
           name: user.name,
         };
-        if(userType=='Student'){
-        const details={
+        const details: any = {
           name: user.name,
-          rollno: user.rollno,
           semester: user.semester,
-          course: user.course,
+          department: user.department,
           college: user.college,
-          
+          university: user.university,
+          userType: user.userType,
+        };
+
+        if (user.userType == "Student") {
+          details.rollno = user.rollno;
+        } else if (user.userType == "Teacher") {
+          details.subject = user.subject;
         }
-          cookies().set("student-details", JSON.stringify(details));
-        
-}
-      
-      
+        cookies().set("user-details", JSON.stringify(details));
+
         return {
           ...session,
-        } as any
+        } as any;
       },
     }),
     GoogleProvider({

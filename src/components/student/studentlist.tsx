@@ -1,7 +1,7 @@
 
 
 'use client'
-import { Repo, assignments } from "@/types/interface";
+import {assignments } from "@/types/interface";
 
 
 
@@ -22,7 +22,7 @@ export const StudentList: React.FC<ListProps> = ({ data, onPress }) => {
                     <a href="#" className="block hover:bg-gray-50">
                         <div className="px-4 py-4 sm:px-6">
                             <div className="flex items-center justify-between">
-                                <a href={person.repoLink} className="truncate text-sm font-medium text-indigo-600">{person.name}</a>
+                                <a  className="truncate text-sm font-medium text-indigo-600">{person.name}</a>
                                 <div className="ml-2 flex flex-shrink-0">
                                     <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">{person.name}</span>
                                 </div>

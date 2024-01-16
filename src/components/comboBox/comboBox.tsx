@@ -17,19 +17,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { problems } from "@/utils/javascript"
 interface DataArray {
-value: string;
-label: string;
+  value: string;
+  label: string;
 }
 
 interface ComboboxDemoProps {
-    frameworks: DataArray[];
-    value:string
-    setValue: any;
-placeholder: string;
+  frameworks: DataArray[];
+  value: string
+  setValue: any;
+  placeholder: string;
+  handleChange: any;
+  bg: string
 }
 
-export function ComboboxDemo({frameworks, value ,setValue,placeholder}: ComboboxDemoProps) {
+export function ComboboxDemo({ frameworks, value, setValue, placeholder, handleChange,bg }: ComboboxDemoProps) {
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -37,7 +40,7 @@ export function ComboboxDemo({frameworks, value ,setValue,placeholder}: Combobox
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className='text-xs text-label-2 text-white bg-[#282828]'
+          className={`text-xs  text-label-2 ${bg}`}
           role="combobox"
           aria-expanded={open}
         //   className="w-[200px] justify-between"
@@ -56,10 +59,16 @@ export function ComboboxDemo({frameworks, value ,setValue,placeholder}: Combobox
             {frameworks.map((framework) => (
               <CommandItem
                 key={framework.value}
+                className={bg}
                 value={framework.value}
                 onSelect={(currentValue) => {
+
+
                   setValue(currentValue === value ? "" : currentValue)
+                  console.log(value, 'this is vbalue', currentValue);
+                  handleChange(currentValue)
                   setOpen(false)
+
                 }}
 
               >

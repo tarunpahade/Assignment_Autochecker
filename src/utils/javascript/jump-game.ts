@@ -20,8 +20,67 @@ export const jumpGameHandler = (fn: any) => {
 		throw new Error(error);
 	}
 };
+const starterCode = {
+    js: `function canJump(nums) { 
+        // Write Your Code Here 
+    }`,
+    java: `public boolean canJump(int[] nums) {
+        // Write Your Code Here
+    }`,
+    py: `def canJump(nums):     
+        # Write your code here
+    `,
+    cpp: `bool canJump(vector<int>& nums) {
+        // Write your code here
+    }`,
+    c: `int canJump(int* nums, int numsSize) {
+        // Write your code here
+    }`
+};
 
 
+const attachAtTheEndJumpGame = {
+    js: `
+const tests = [[2, 3, 1, 1, 4], [3, 2, 1, 0, 4], [2, 0, 0], [2, 5, 0, 0]];
+tests.forEach(test => console.log(canJump(test)));`,
+
+    java: `
+public static void main(String[] args) {
+    int[][] tests = {{2, 3, 1, 1, 4}, {3, 2, 1, 0, 4}, {2, 0, 0}, {2, 5, 0, 0}};
+    for (int[] test : tests) {
+        System.out.println(canJump(test));
+    }
+}`,
+
+    py: `
+tests = [[2, 3, 1, 1, 4], [3, 2, 1, 0, 4], [2, 0, 0], [2, 5, 0, 0]]
+for test in tests:
+    print(canJump(test))`,
+
+    cpp: `
+int main() {
+    vector<vector<int>> tests = {{2, 3, 1, 1, 4}, {3, 2, 1, 0, 4}, {2, 0, 0}, {2, 5, 0, 0}};
+    for (auto& test : tests) {
+        cout << canJump(test) << " ";
+    }
+    cout << endl;
+    return 0;
+}`,
+
+    c: `
+int main() {
+    int test1[] = {2, 3, 1, 1, 4};
+    int test2[] = {3, 2, 1, 0, 4};
+    int test3[] = {2, 0, 0};
+    int test4[] = {2, 5, 0, 0};
+    int* tests[] = {test1, test2, test3, test4};
+    int testSizes[] = {5, 5, 3, 4};
+    for (int i = 0; i < 4; i++) {
+        printf("%d ", canJump(tests[i], testSizes[i]));
+    }
+    return 0;
+}`
+};
 
 export const jumpGame: Problem = {
 	id: "jump-game",
@@ -59,4 +118,6 @@ export const jumpGame: Problem = {
 	handlerFunction: jumpGameHandler,
 	starterFunctionName: "function canJump(",
 	order: 3,
+	starterFunctionNameMultipleLanguages: starterCode,
+	
 };

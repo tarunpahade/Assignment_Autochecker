@@ -3,29 +3,27 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest, res: NextResponse) {
   try {
-    const { email } = await request.json();
-    console.log("Hii", email);
+    const req = await request.json();
 
-    const user = await Users.findOne({ name: email });
-  
-  console.log('updated all users');
-  
-    console.log(user, "this is user");
+    const { name } =req
+    console.log(name,req,'this is name anfd request');
+    
+    const user = await Users.findOne({ name });  
 
     const res = await Assignments.find({}).toArray();
-    console.log(res);
 
-    const filteredAssignments = res.filter((x) => x.forYear === user!.year);
-    console.log("theses aRAE Filteredf Assignments", filteredAssignments);
+    const filteredAssignments = res.filter((x) => x.semester=== user!.semester);
+    const filteredAssignments2 = filteredAssignments.filter((x) => x.department=== user!.department);
+
+    console.log("Theses are Filtered Assignments", filteredAssignments);
 
     const filter2 = await Promise.all(
-      filteredAssignments.map(async (y) => {
-        console.log("starting to map");
+      filteredAssignments2.map(async (y) => {
 
         const completed = await CompleteAssignment.findOne({ 
           assignmentId: y._id,
         });
-        console.log(completed,'thses are completed assignment');
+
         const filteredAssignment = {
           ...y,
         };
@@ -33,15 +31,15 @@ export async function POST(request: NextRequest, res: NextResponse) {
         if (completed!.completedBy  && Array.isArray(completed!.completedBy)) {
           const filtered = completed!.completedBy;
 
-          const emailExists = filtered.some(
-            (feedback: any) => feedback.name === email
+          const nameExists = filtered.some(
+            (feedback: any) => feedback.name === name
           );
-          if (emailExists) {
+          if (nameExists) {
             console.log(filtered,'this is filtered');
           
             filteredAssignment.markedAs = "complete";
-            filteredAssignment.submittedCode= filtered.find((feedback: any) => feedback.name === email)?.submittedCode
-            const result = filtered.find((feedback: any) => feedback.name === email)?.result
+            filteredAssignment.submittedCode= filtered.find((feedback: any) => feedback.name === name)?.submittedCode
+            const result = filtered.find((feedback: any) => feedback.name === name)?.result
             filteredAssignment.result=result
            
           }  else {
@@ -54,8 +52,6 @@ export async function POST(request: NextRequest, res: NextResponse) {
         return filteredAssignment;
       })
     );
-
-    console.log(filter2, "This is filter 2");
 
     return NextResponse.json(filter2);
   } catch (error: any) {

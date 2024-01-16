@@ -1,63 +1,152 @@
 'use client'
-import { BookAIcon, LogOutIcon, MoreVertical, User, UserCircle } from 'lucide-react'
+import { BookAIcon, Code, LogOutIcon, MoreVertical, User, UserCircle } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
-import Image from 'next/image'
-import React, { Profiler } from 'react'
-import { BarChart, Book } from 'react-feather'
+import React, { useEffect, useState } from 'react'
 import {
    Popover,
    PopoverContent,
    PopoverTrigger,
 } from "@/components/ui/popover"
+import { Badge } from '../ui/badge'
+
+const getCookie = (name: string): string | null => {
+   const cookieArray = document.cookie.split(';');
+   for (let cookiePair of cookieArray) {
+     let [key, value] = cookiePair.trim().split('=');
+     if (key === name) {
+       return decodeURIComponent(value);
+     }
+   }
+   return null;
+ };
+ 
+ 
 export default function Sidebar({ currentPath }: any) {
-   
-   const { data: session } = useSession()
-   const navbar = [
-      // {
-      //    name: 'Overview',
-      //    svg: () => {
-      //       return (
-      //          <School height={14} width={14} />
-      //       )
-      //    },
-      //    href: 'overview'
-      // },
-      {
-         name: 'Courses',
-         svg: () => {
-            return (
-               <BookAIcon height={14} width={14} />
-            )
-         },
-         href: 'courses'
-      },
-      {
-         name: 'Profile',
-         svg: () => {
-            return (
-               <User height={14} width={14} />
-            )
-         },
-         href: 'tasks'
+   const {data: session}=useSession()
+   const [userType,setUserType] =useState('Student')
+
+   useEffect(() => {
+      const cookieValue = getCookie('userType');
+      if (cookieValue) {
+         setUserType(cookieValue);
       }
+    }, []);
+  
+
+   const student:any=[
+     {
+       name: 'Courses',
+       svg: () => {
+          return (
+             <BookAIcon height={14} width={14} />
+          )
+       },
+       href: 'courses',
+    },
+    {
+       name: 'Programming',
+       svg: () => {
+          return (
+             <Code height={14} width={14} />
+          )
+       },
+       href: 'programming',
+    },
+    {
+       name: 'Profile',
+       svg: () => {
+          return (
+             <User height={14} width={14} />
+          )
+       },
+       href: 'profile'
+    }
    ]
+   const teacher:any=[
+    {
+       name: 'Attendance',
+       svg: () => {
+          return (
+             <User height={14} width={14} />
+          )
+       },
+       href: 'attendance'
+    },
+    {
+      name: 'Assignments',
+      svg: () => {
+         return (
+            <Code height={14} width={14} />
+         )
+      },
+      href: 'assignments',
+   }, {
+      name: 'Analytics',
+      svg: () => {
+         return (
+            <BookAIcon height={14} width={14} />
+         )
+      },
+      href: 'reports',
+   }
+]
+   const admin:any=[
+     {
+       name: 'Classes',
+       svg: () => {
+          return (
+             <BookAIcon height={14} width={14} />
+          )
+       },
+       href: 'classes',
+    },
+    {
+       name: 'Attendance',
+       svg: () => {
+          return (
+             <User height={14} width={14} />
+          )
+       },
+       href: 'attendance'
+    },
+    {
+       name: 'Analytics',
+       svg: () => {
+          return (
+             <Code height={14} width={14} />
+          )
+       },
+       href: 'analytics',  
+    }
+   ]
+ 
+   let navbar;
+   if (userType === 'Student') {
+     navbar = student;
+   } else if (userType === 'Teacher') {
+     navbar = teacher;
+   } else if (userType === 'Admin') {
+     navbar = admin;
+   }
+  
    const handleLogout = () => {
-      document.cookie = "student-details=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "user-details=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
       signOut({ callbackUrl: '/login' });
    }
 
    return (
-
       <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+         
          <div className="h-full pt-5 px-3 py-4 overflow-y-auto bg-gray-100 dark:bg-gray-800  border-gray-300 border-r ">
+         <Badge className='my-5' variant={'outline'}>{userType}</Badge>
             <ul className="space-y-2 font-medium">
 
-               {navbar.map((item: any, index) => (
+               {navbar.map((item: any, index: React.Key | null | undefined) => (
                   <li key={index}>
                      <a
                         href={item.href}
-                        className={`flex items-center p-2 rounded-sm text-sm dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${currentPath === `${item.name}` ? 'bg-black text-white hover:bg-slate-600' : ''
+                        className={`flex items-center  p-2 rounded-sm text-sm dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${currentPath === `${item.href.toLowerCase()}` ? 'bg-black text-white hover:bg-slate-600' : ''
                            }`}
                      >
                         {item.svg()}
@@ -102,7 +191,9 @@ export default function Sidebar({ currentPath }: any) {
                </li>
             </ul>
          </div>
+
       </aside>
+      
 
    )
 }

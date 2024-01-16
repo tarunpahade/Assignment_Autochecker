@@ -1,20 +1,15 @@
 "use client";
-import axios from "axios";
 import { useSession } from "next-auth/react";
-
-import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default function Home() {
   const { status } = useSession();
-  const router = useRouter();
   const { data: session } = useSession();
   console.log(session);
   if (status === "unauthenticated") {
     redirect("/login");
   } else if (status === "authenticated"){
     redirect("/login");
-
   }
 
   return (
@@ -65,8 +60,6 @@ export default function Home() {
                 type="email"
                 name="email"
               />
-                {" "}
-                
             </div>
             <div className="flex flex-col items-center justify-center space-y-2 rounded-b-lg border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-700 dark:bg-stone-800 sm:flex-row sm:justify-between sm:space-y-0 sm:px-10">
               <p className="text-sm text-stone-500 dark:text-stone-400">
@@ -78,7 +71,7 @@ export default function Home() {
             </div>
           </form>
         </div>
-      </div>{" "}
+      </div>
     </div>
   );
 }

@@ -1,33 +1,9 @@
-Main Goal Of this company is to that students can get better jobs
+Example Of Text 
 
+AFFAN AHMED KHAN ATHARVA UDAYKUMAR GULVE AVINASH SHASHI SHARMA FAHEEM MOHAMMED HANIF SHAIKH HARSHAD ANAND JAISWAL NANDINI HEMANT BARSAGADE ISHWAR SONYABAPU JAGDALE MAYANK MOHAN BONDRE MOHAMMAD UMAR ABDUL GAFFAR MOHAMMED ZAID SIDDIQUI OMKAR ANKUSH SARAF GAIKWAD PAWAN SUDHAKAR RAHUL RAJIV KUMAR YADAV. RAHUL SANTOSH WAGHMARE RITESH SANTOSH MANGDARE SAJID JABBAR SHAIKH SANAN KHUSRO TALIGAR SHAM GOPALRAO TANGE SONAL SANJAY DIWAN SYED MINNATULLAH SYED H TEJAS VIDYADHAR DALVI TEJAS ASHOK SOLANKE SHIRSATH VAIBHAV VAUNATH GIRI VEDANG! MAHENDRA THOMBARE UNTWALE WASEB IKRAMODDIN ZAID MOHAMMED WAHIDULLAH BAIG MADHURA VINOD HARALKAR NAREN DEEPAK POPALE RENUKA ANIL GHORPADE SHAIKH MUDASSIR AHVIED SHAIKH MOHSIN MUJAHID RUTIK SUBHASH JALHARE RENUKA SANJAY PADOLE AARTI PRAMOD JOSHI RUSHIKESH SANJAY MALANI MD AFFAN HABIBUDDIN
 
-
-
-
-When I am Building a feature that marks the assignment complete and adds their name to database in completed assignments I want to keep in mind look with the eye of the problem I am solving
-So In that case The Problem I am solving here is that I am making a app that automatically checks the code of the assignment givent to then.
- Featuyres I am most likely to use here :-
-     1. Github actions to check my code automatically and detect bugs .
-     2. LLM I can also use a LLM to check code.
-     3. I can use a API of a existing LLm like open ai 
-
-todo list 
-Complete Assignment
-
-## Complete Playground 
-1. Learn How fine tuning works and also learn about AI agents work.  
-2. Fine Tune Model on code CSS , HTML.
-3. Make Data avaliable offline .
-4. Use Openai api.
-(a.) Add Code Submmision 
-(b.) Add Response From AI.
-
-Add cookie restriction maybe later in /assignments/:id
-Complete upload file type in /student allow js upload.
- 
-Add Generate Report which generates for the teacher as well as students
-
-
-Imp Do Not use the ThemeProvider Causing errors useContext 
-Password of classteacher is 54321
-Password of student is 12345
+Todo List 
+1. Do a latency Test on my backend Api keys  
+2. Complete Reports Backend 
+3. Complete Analytics 
+4. 

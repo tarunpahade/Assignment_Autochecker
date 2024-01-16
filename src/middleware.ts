@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
     path === "/signup" ||
     path === "/reset";
   const token = request.cookies.get("next-auth.session-token")?.value || "";
-  let cookie = request.cookies.get("userRole");
+  let cookie = request.cookies.get("userType");
   if (path === "/signup") {
     return new NextResponse(
       JSON.stringify({ success: false, message: "Denied Access" }),
@@ -39,9 +39,11 @@ export function middleware(request: NextRequest) {
   }
   if (isPublicPath && token) {
     if (cookie?.value === "Student") {
-      return NextResponse.redirect(new URL("/overview", request.nextUrl));
+      return NextResponse.redirect(new URL("/courses", request.nextUrl));
     } else if (cookie?.value === "Teacher") {
-      return NextResponse.redirect(new URL("/teacher", request.nextUrl));
+      return NextResponse.redirect(new URL("/reports", request.nextUrl));
+    }else if (cookie?.value === "Admin") {
+      return NextResponse.redirect(new URL("/classes", request.nextUrl));
     }
   }
   if (!isPublicPath && !token) {
@@ -57,7 +59,6 @@ export const config = {
     "/reset",
     "/assignment",
     "/assignment/:path*",
-    "/teacher",
     "/playground",
     "/preview",
     "/assignmentDetails",

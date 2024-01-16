@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+.text1 {
+    font-size: 2.25rem; /* equivalent to text-4xl */
+    font-weight: 700; /* equivalent to font-bold */
+  }
+  .text2 {
+    margin-top: 0; /* equivalent to my-0 */
+    margin-bottom: 0; /* equivalent to my-0 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'cal', sans-serif; /* 'font-cal' seems like a custom font, replace 'cal' with your actual font name */
+    font-size: 1.25rem; /* equivalent to text-xl */
+    font-weight: 700; /* equivalent to font-bold */
+    letter-spacing: 0.025em; /* equivalent to tracking-wide */
+  }
+  .text2.dark {
+    color: white; /* for dark:text-white */
+  }
+    .text3 {
+    font-size: 0.875rem; /* equivalent to text-sm */
+  }
+  

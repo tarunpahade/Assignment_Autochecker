@@ -3,17 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { Octokit } from "octokit";
 import { config } from "dotenv";
 import { uploadBase64Image } from "@/controllers/userController";
+import { assignments } from "@/types/interface";
 config();
 
-interface assignmentsDatabase {
-  name: string;
-  description: string;
-  dateUploaded: string;
-  submissionDate: string;
-  image: string;
-  uploadedBy: string;
-  forYear: string;
-}
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,21 +16,16 @@ export async function POST(request: NextRequest) {
       
       const awsS3link = await uploadBase64Image(image);
       reqBody.image = awsS3link;
-      console.log(awsS3link, "this is link for api");
-      console.log(reqBody);
     }
-    const datainDatabase: assignmentsDatabase = {
+    const datainDatabase: assignments = {
       ...reqBody,
     };
-    console.log(datainDatabase);
-    console.log("Starting to insert in DB");
-
+ 
     const res = await Assignments.insertOne(datainDatabase);
 
     const res3 = await CompleteAssignment.insertOne({
       assignmentId: res.insertedId,
       assignmentName: reqBody.name,
-      
       dateUploaded: datainDatabase.dateUploaded,
       submissionDate: datainDatabase.submissionDate,
       uploadedBy: datainDatabase.uploadedBy,

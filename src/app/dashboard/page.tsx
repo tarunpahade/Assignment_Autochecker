@@ -1,5 +1,4 @@
 'use client'
-import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import {
   Tabs,
@@ -23,8 +22,7 @@ export default function DashboardPage() {
   };
   return (
     <>
-
-      <div className=" flex-col md:flex">
+<div className=" flex-col md:flex">
    <InstructorNav />
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">

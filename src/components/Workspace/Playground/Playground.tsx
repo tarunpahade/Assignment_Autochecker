@@ -7,7 +7,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { cpp } from "@codemirror/lang-cpp";
 import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
-import { clike, c } from '@codemirror/legacy-modes/mode/clike';
+import { c } from '@codemirror/legacy-modes/mode/clike';
 import { StreamLanguage } from '@codemirror/language';
 
 import EditorFooter from "./EditorFooter";
@@ -62,9 +62,9 @@ const languages = [
 const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved }) => {
 	const { toast } = useToast()
 	const { data: session } = useSession();
-	const [value, setValue] = useState("js")
-	
-	const [userCode, setUserCode] = useState(problem.starterCode);
+	const [value, setValue]: any = useState("js")
+	const pid = problem.id
+	const [userCode, setUserCode] = useState(problems[pid as string].starterFunctionNameMultipleLanguages[value]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);;
 	const [fontSize] = useLocalStorage("lcc-fontSize", "16px");
@@ -76,7 +76,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 	});
 
 	const [user] = useState({ email: 'user@example.com' });
-	const pid = problem.id
+	
 	const [output, setOutput] = useState("");
 	const [jobId, setJobId] = useState(null);
 	const [status, setStatus] = useState('');
@@ -100,7 +100,7 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 
 
 			const { data } = await axios.post("http://localhost:3000/run", payload);
-			console.log(data,'this is data');
+			console.log(data, 'this is data');
 
 			if (data.jobId) {
 				setJobId(data.jobId);
@@ -114,13 +114,13 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 								id: data.jobId,
 							},
 						}
-					); 
+					);
 					const { success, job, error } = statusRes;
-					console.log(statusRes,'this is Data');
+					console.log(statusRes, 'this is Data');
 					if (success) {
 						const { status: jobStatus, output: jobOutput } = job;
 						console.log(job);
-						
+
 						setStatus(jobStatus);
 						setJobDetails(JSON.stringify(job));
 						if (jobStatus === "pending") return;
@@ -143,132 +143,135 @@ const Playground: React.FC<PlaygroundProps> = ({ problem, setSuccess, setSolved 
 
 		}
 	};
-	
-// Sends request to backend and does polling in the backend
-const handleRun = async () => {
-  try {
-    const payload = {
-		language: value,
-		code: userCode,
-	};
-console.log('starting to submit');
 
-    // Submit code to the backend endpoint
-    const response = await axios.post("/api/problems/runProblem", payload);
-    const { jobId, success, error } = response.data;
-console.log( response.data,'this is response data ');
-    if (success && jobId) {
-		console.log('starting polling');
-		
-console.log('Startying polling');
+	// Sends request to backend and does polling in the backend
+	const handleRun = async () => {
+		try {
+			const payload = {
+				language: value,
+				code: userCode,
+			};
+			console.log('starting to submit');
 
-		setJobId(jobId);
-		setStatus("Submitted.");
+			// Submit code to the backend endpoint
+			const response = await axios.post("/api/problems/runProblem", payload);
+			const { jobId, success, error } = response.data;
+			console.log(response.data, 'this is response data ');
+			if (success && jobId) {
+				console.log('starting polling');
 
-		pollInterval = setInterval(async () => {
-			const { data: statusRes } = await axios.get(
-				`http://localhost:3000/status`,
-				{
-					params: {
-						id: jobId,
-					},
-				}
-			); 
-			const { success, job: job2, error } = statusRes;
-			console.log(statusRes,'this is Data');
-		
-			if (success) {
-				const { status: jobStatus, output: jobOutput } = job2;
-				console.log(job2,'i am job2 ');
-				
-				setStatus(jobStatus);
-				setJobDetails(JSON.stringify(job2));
-				if (jobStatus === "pending") return;
-				setOutput(jobOutput);
-				setSelectedTab('Output')
-				clearInterval(pollInterval);
+				console.log('Startying polling');
+
+				setJobId(jobId);
+				setStatus("Submitted.");
+
+				pollInterval = setInterval(async () => {
+					const { data: statusRes } = await axios.get(
+						`http://localhost:3000/status`,
+						{
+							params: {
+								id: jobId,
+							},
+						}
+					);
+					const { success, job: job2, error } = statusRes;
+					console.log(statusRes, 'this is Data');
+
+					if (success) {
+						const { status: jobStatus, output: jobOutput } = job2;
+						console.log(job2, 'i am job2 ');
+
+						setStatus(jobStatus);
+						setJobDetails(JSON.stringify(job2));
+						if (jobStatus === "pending") return;
+						setOutput(jobOutput);
+						setSelectedTab('Output')
+						clearInterval(pollInterval);
+					} else {
+						console.error(error);
+						setOutput(error.message);
+						//				setSelectedTab('Console')
+
+						setStatus("Bad request");
+						clearInterval(pollInterval);
+					}
+				}, 1000);
 			} else {
-				console.error(error);
-				setOutput(error.message);
-//				setSelectedTab('Console')
+				setOutput("Retry again.");
 
-				setStatus("Bad request");
-				clearInterval(pollInterval);
 			}
-		}, 1000);
-	} else {
-		setOutput("Retry again.");
-	
-    }
-  } catch (error: any) {
-    console.error("Error in handleRun:", error.message,error);
-  }
-};
+		} catch (error: any) {
+			console.error("Error in handleRun:", error.message, error);
+		}
+	};
 
-// Runs Function and tests in javascript
-const handleSubmit2 = async (e: any) => {
-    e.preventDefault();
-    try {
-        const newuserCode = userCode.slice(userCode.indexOf(problem.starterFunctionName));
-        
-        if (value === 'Javascript') {
-            // Execute locally for JavaScript
-            const cb = new Function(`return ${newuserCode}`)();
-            const handlerFunction = problems[pid as string].handlerFunction;
+	// Runs Function and tests in javascript
+	const handleSubmit2 = async (e: any) => {
+		e.preventDefault();
+		try {
 
-            if (typeof handlerFunction === "function") {
-                const success = handlerFunction(cb);
-                handleSuccess(success);
-            }
-        } else {
-            const cb = new Function(`return ${newuserCode}`)();
-            const handlerFunction = problems[pid as string].starterFunctionNameMultipleLanguages;
-			const success = handlerFunction(value, userCode);
-console.log(success);
+			const starterFunction = problems[pid as string].starterFunctionNameMultipleLanguages[value];
+			const newuserCode = userCode.slice(userCode.indexOf(starterFunction));
+			console.log(userCode, 'this is usercode');
 
-            const response = await axios.post('http://localhost:3000/run', {
-                language: value,
-                code: newuserCode,
-            });
+			// if (value === 'js') {
+			// 	// Execute locally for JavaScript
+			// 	const cb = new Function(`return ${newuserCode}`)();
+			// 	const handlerFunction = problems[pid as string].handlerFunction;
 
-            if (response.data.job.status === 'success') {
-                handleSuccess(true);
-            } else {
-                handleFailure();
-            }
-        }
-    } catch (error: any) {
-        console.log(error.message);
-        handleFailure();
-    }
-};
+			// 	if (typeof handlerFunction === "function") {
+			// 		const success = await handlerFunction(cb);
+			// 		handleSuccess(success);
+			// 	}
+			// } else {
+				console.log('hii ', value);
 
-const handleSuccess = (success: boolean) => {
-    if (success) {
-        toast({
-            title: 'Congrats! All tests passed!',
-            description: "Your code was successfully submitted",
-        });
+				const handlerFunction = problems[pid as string].handlerTwoSumMultipleLanguages;
+				console.log(handlerFunction, 'this is handler');
 
-        setUserCode(userCode);
-        setSuccess(true);
-        setTimeout(() => {
-            setSuccess(false);
-        }, 4000);
+				const success = await handlerFunction(value, userCode);
+				console.log(success);
 
-        setSolved(true);
-    } else {
-        handleFailure();
-    }
-};
+				
 
-const handleFailure = () => {
-    toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your code or request.",
-    });
-};
+				if (success.data.job.status === 'success') {
+					handleSuccess(true);
+				} else {
+					handleFailure();
+				}
+			// }
+		} catch (error: any) {
+			console.log(error.message);
+			handleFailure();
+		}
+	};
+
+	const handleSuccess = (success: boolean) => {
+		if (success) {
+			toast({
+				title: 'Congrats! All tests passed!',
+				description: "Your code was successfully submitted",
+			});
+
+			setUserCode(userCode);
+			setSuccess(true);
+			setTimeout(() => {
+				setSuccess(false);
+			}, 4000);
+
+			setSolved(true);
+		} else {
+			handleFailure();
+		}
+	};
+
+	const handleFailure = () => {
+		toast({
+			variant: "destructive",
+			title: "Uh oh! Something went wrong.",
+			description: "There was a problem with your code or request.",
+		});
+	};
 
 	//Stores User Details and sends to submitProblem
 	const SendData = async (e: any) => {
@@ -311,20 +314,29 @@ const handleFailure = () => {
 	useEffect(() => {
 		const code = localStorage.getItem(`code-${pid}`);
 		if (user) {
-			setUserCode(code ? JSON.parse(code) : problem.starterCode);
+
+			setUserCode(problems[pid as string].starterFunctionNameMultipleLanguages[value]);
 		} else {
-			setUserCode(problem.starterCode);
+			setUserCode(problems[pid as string].starterFunctionNameMultipleLanguages[value]);
 		}
-	}, [pid, user, problem.starterCode]);
+	}, [pid, user, problem.starterCode, value]);
 
 	const onChange = (value: string) => {
-		setUserCode(value);
+		
+		 setUserCode(value);
 		localStorage.setItem(`code-${pid}`, JSON.stringify(value));
+	
 	};
+	const handleChange = (selectedLanguage:string) => {
+		const newCode = problems[pid as string].starterFunctionNameMultipleLanguages[selectedLanguage];
+		console.log('Selected language: ', selectedLanguage,newCode);
 
+		setUserCode(newCode);
+	}
+	
 	return (
 		<div className='flex flex-col bg-dark-layer-1 relative overflow-x-hidden'>
-			<PreferenceNav settings={settings} setSettings={setSettings} value={value} setValue={setValue} languages={languages} />
+			<PreferenceNav handleChange={handleChange} settings={settings} setSettings={setSettings} value={value} setValue={setValue} languages={languages} />
 
 			<Split className='h-[calc(100vh-94px)]' direction='vertical' sizes={[60, 40]} minSize={60}>
 				<div className='w-full overflow-auto'>
@@ -355,7 +367,7 @@ const handleFailure = () => {
 									}`}
 								onClick={() => setSelectedTab('Output')}
 							>
-								Output 
+								Output
 							</div>
 							<div
 								className={`text-sm font-medium leading-5 px-2 cursor-pointer ${selectedTab === 'Console' ? 'text-white border-white border-b-2' : 'text-gray-500 border-transparent'
@@ -417,7 +429,7 @@ const handleFailure = () => {
 					)}
 				</div>
 			</Split>
-			<EditorFooter handleSubmit={handleRun} />
+			<EditorFooter handleSubmit={handleSubmit2} />
 		</div>
 	);
 };

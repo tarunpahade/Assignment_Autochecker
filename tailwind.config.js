@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors');
+
+const brandColor = colors.blue;
 module.exports = {
   darkMode: ["class"],
   content: [
@@ -17,6 +20,10 @@ module.exports = {
       },
     },
     extend: {
+      colors: {
+         brand:brandColor,
+
+        },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
