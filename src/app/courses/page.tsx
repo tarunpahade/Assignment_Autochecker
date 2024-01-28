@@ -17,7 +17,6 @@ export default function Example() {
   const { status } = useSession()
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState('');
   const [error, setError] = useState(false);
 
   const [userDetails, setUserDetails]: any = useState({
@@ -27,8 +26,6 @@ export default function Example() {
   })
 
   useEffect(() => {
-    console.log(getCookies('user-details'));
-
     setUserDetails(getCookies('user-details'));
   }, []);
 
@@ -37,7 +34,6 @@ export default function Example() {
     const fetchData = async () => {
       try {
         const response = await axios.post('/api/student/getAssignmentDetails', { username: getCookies('user-details').name });
-        console.log(response.data, 'this is response data');
 
         setAssignments(response.data.userData);
         if (response.data.length === 0) {
@@ -106,8 +102,6 @@ export default function Example() {
 
       reader.onload = async(event: any) => {
         setSelectedImage(event.target.result);
-        // const awsS3link:any = await uploadBase64Image(event.target.result);
-        // setImageUrl(awsS3link)
       };
       reader.readAsDataURL(file);
     }

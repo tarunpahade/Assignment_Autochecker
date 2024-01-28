@@ -6,7 +6,7 @@ export async function POST(request: NextRequest, res: NextResponse) {
   try {
     const reqBody = await request.json();
     const { username } = reqBody;
-    console.log("this is username of the man", username);
+
 
     const res = await Assignments.find({}).toArray();
     console.log(res, "this is list of assignment");
@@ -20,7 +20,6 @@ export async function POST(request: NextRequest, res: NextResponse) {
         _id: new ObjectId(y.assignmentId),
       });
       if (y.completedBy === null || y.completedBy === undefined) {
-        console.log("this is null");
 
         return {
           name: res!.name,
@@ -30,12 +29,12 @@ export async function POST(request: NextRequest, res: NextResponse) {
         };
       } else if (y.completedBy) {
         const name = y.completedBy.map((user: any) => user.name === username);
-        console.log(name[0], "tame");
+        console.log(name[0], "tame",name);
 
         y.completedBy.forEach((name: any) => newenail.add(name.name));
         return {
           name: res!.name,
-          completedBy: name[0],
+          complete: name[0],
           count: y.completedCount,
           ...res,
         };
@@ -49,7 +48,6 @@ export async function POST(request: NextRequest, res: NextResponse) {
       }
     });
 
-    // Use Promise.all to wait for all promises to resolve
     const userData = await Promise.all(userAndUsersWhoCompletedPromises)
       .then((userAndUsersWhoCompleted) => {
         return userAndUsersWhoCompleted;

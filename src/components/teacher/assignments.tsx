@@ -1,27 +1,10 @@
 'use client'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { useState } from 'react';
-import { Button } from 'react-day-picker';
+import { useRouter } from 'next/navigation';
 
-export const AssignmentsList: React.FC<any> = ({ data, userType, handleSubmit }) => {
-    const [imageData, setImageData] = useState('')
-    const uploadImage = async (e: any) => {
-        const file = e.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onload = async (event: any) => {
-                console.log(event.target.result, 'this is the result');
-                setImageData(event.target.result)
-                // const awsS3link:any = await uploadBase64Image(event.target.result);
-                // setImageUrl(awsS3link)
-            };
-            reader.readAsDataURL(file);
-        }
-
-
-    }
+export const AssignmentsList: React.FC<any> = ({ data, userType, handleSubmit, onclick }) => {
+    const router= useRouter()
+    
     return (
         <ul className='myComponent' role="list" >
             <Table>
@@ -29,16 +12,15 @@ export const AssignmentsList: React.FC<any> = ({ data, userType, handleSubmit })
                     <TableRow>
                         <TableHead >Sr. No</TableHead>
                         <TableHead >Name</TableHead>
-                        <TableHead>Submission Date</TableHead>
-
-                        
-
-
+                        <TableHead>Date Submission</TableHead>
+                        <TableHead>Status</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.map((person: any, index: number) => (
-                        <TableRow key={index}>
+                        <TableRow onClick={()=>{
+                            router.push(`/assignments/${person._id}`)
+                        }} key={index}>
                             <TableCell>
                                 {index + 1}
                             </TableCell>
@@ -48,7 +30,10 @@ export const AssignmentsList: React.FC<any> = ({ data, userType, handleSubmit })
                             <TableCell>
                                 {person.submissionDate}
                             </TableCell>
+                            <TableCell>
+                            {JSON.stringify(person.complete == null ? false : true)}
 
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

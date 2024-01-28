@@ -12,7 +12,7 @@ const sampleHeaderData = ["Student Name"];
 const sampleTableData: any[] = [];
 interface TableItem {
   name: string;
-  markedAs?: string[];
+  markedAs?: any;
 }
 
 export const users = [

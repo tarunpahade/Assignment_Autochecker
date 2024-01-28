@@ -141,25 +141,6 @@ export const chooseAndSubmit = () => {
         }
       };
       
-    const updateDatabase2 = async (e: any) => {
-        console.log(e);
-
-        // try {
-        //     console.log(selected);
-        //     updateDatabase({ e: e, submittedCode :fileContent })
-        //     const response = await axios.post('api/users/completeAssignment', { repoLink: selected.url, currecntAssignment: e, email })
-        //     console.log(response);
-
-        //     setSucessfullySentMail(true)
-
-        // } catch (error: any) {
-        //     console.log(error);
-
-        // }
-
-
-
-    }
 
   return (
     <div className='justify-between flex'>

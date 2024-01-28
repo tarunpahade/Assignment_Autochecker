@@ -1,6 +1,4 @@
 import Users, { Assignments, CompleteAssignment } from "@/dbconfig/dbconfig";
-import { SignUp, completeAssignments } from "@/types/interface";
-import { log } from "console";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 

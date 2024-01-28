@@ -141,6 +141,7 @@ console.log(newCode);
         currecntAssignment: userData,
         name: session?.user.name,
         submittedCode: htmlCode,
+        subbmissionType:'Code'
       });
       console.log(response.data);
 

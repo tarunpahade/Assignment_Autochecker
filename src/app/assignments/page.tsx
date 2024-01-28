@@ -30,8 +30,7 @@ export default function Example() {
   useEffect(() => {
     setUserDetails(getCookies('user-details'));
   }, []);
-
-
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +80,8 @@ export default function Example() {
     setAssignments(data2)
     setdataNull(false)
   }
+
+
   if (dataNull) {
     return (
       <main>
